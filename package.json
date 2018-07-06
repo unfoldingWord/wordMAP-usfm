@@ -12,7 +12,7 @@
     "prepublishOnly": "npm test && npm run build"
   },
   "bin": {
-    "wordmap-usfm": "dist/cli.js"
+    "wordmap-usfm": "bin/magicli.js"
   },
   "jest": {
     "moduleFileExtensions": [
@@ -46,7 +46,11 @@
     "typescript": "^2.8.3"
   },
   "dependencies": {
+    "@types/fs-extra": "^5.0.3",
     "@types/yargs": "^11.0.0",
+    "fs-extra": "^6.0.1",
+    "magicli": "^0.1.2",
+    "usfm-js": "^1.0.0-beta.30",
     "yargs": "^11.0.0"
   }
 }

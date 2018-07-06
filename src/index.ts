@@ -1,25 +1,10 @@
-/**
- * Converts MAP output to usfm
- */
-export default class Converter {
+import * as fs from 'fs-extra';
+import * as usfmjs from 'usfm-js';
 
-    constructor() {
-        // TODO: accept configuration.
-    }
+export function toUSFM3(alignments: object, usfm: string): string {
+    const usfmObject = usfmjs.toJSON(usfm);
 
-    /**
-     * Generate usfm 3
-     * @param {object} input - the json to convert
-     */
-    public toUSFM3(input: object): string {
-        return "";
-    }
+    // TODO: add alignment data to usfm
 
-    /**
-     * Generates usfm 2
-     * @param {object} input - the json to convert
-     */
-    public toUSFM2(input: object): string {
-        return "";
-    }
+    return usfmjs.toUSFM(usfmObject);
 }
