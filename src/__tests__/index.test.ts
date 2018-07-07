@@ -124,6 +124,7 @@ describe('to usfm', () => {
 \\zaln-s | x-content="fo"
 \\w of|x-occurrence="1" x-occurrences="1"\\w*
 \\zaln-e\\*
+
 `;
         expect(toUSFM3(alignments, usfm)).toEqual(expected);
     });

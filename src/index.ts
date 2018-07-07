@@ -1,3 +1,4 @@
+// @ts-ignore
 import * as usfmjs from "usfm-js";
 
 /**
@@ -124,6 +125,19 @@ function getVerseObjectSortKey(obj: any): number {
 }
 
 /**
+ * Removes the sorting key from the verse objects
+ * @param verseObjects
+ */
+function cleanSortingKey(verseObjects: any) {
+    for(const obj of verseObjects) {
+        delete obj.position;
+        if(obj.children) {
+            cleanSortingKey(obj.children);
+        }
+    }
+}
+
+/**
  * Injects alignments into a verse
  * @param usfm
  * @param verse
@@ -163,6 +177,6 @@ export function alignVerse(usfm: any, verse: any) {
 
     const alignedUSFM = [...unusedObjects, ...Object.keys(alignedObjects).map(key=>alignedObjects[key])];
     alignedUSFM.sort(verseObjectComparator);
-    // TODO: remove sorting keys
+    cleanSortingKey(alignedUSFM);
     return alignedUSFM;
 }
