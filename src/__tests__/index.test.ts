@@ -1,15 +1,15 @@
-import {Reference, toUSFM3} from '../index';
+import {Reference, toUSFM3} from "../index";
 
-describe('to usfm', () => {
-    it('has no usfm or alignment data', () => {
-        const usfm = '';
+describe("to usfm", () => {
+    it("has no usfm or alignment data", () => {
+        const usfm = "";
         const alignments = {
             sentences: []
         };
         expect(toUSFM3(alignments, usfm)).toEqual(usfm);
     });
 
-    it('has no alignment data', () => {
+    it("has no alignment data", () => {
         const usfm = `\\id REV unfoldingWord Literal Text
 \\ide UTF-8
 \\h Revelation
@@ -45,7 +45,7 @@ describe('to usfm', () => {
         expect(toUSFM3(alignments, usfm)).toEqual(usfm);
     });
 
-    it('aligns the entire verse', () => {
+    it("aligns the entire verse", () => {
         const usfm = `\\id TIT EN_ULB en_English_ltr Thu Jul 05 2018 15:43:08 GMT-0700 (PDT) tc
 \\h Titus
 
@@ -59,7 +59,7 @@ describe('to usfm', () => {
         const alignments = {
             metadata: {
                 target: {
-                    languageCode: 'en'
+                    languageCode: "en"
                 }
             },
             sentences: [
@@ -135,30 +135,30 @@ describe('to usfm', () => {
     // TODO: test alignment for multiple verses
 });
 
-describe('Reference', () => {
-    it('parses a context', () => {
-        const result = Reference.buildFromContext('MAT001001');
-        expect(result.book).toEqual('MAT');
+describe("Reference", () => {
+    it("parses a context", () => {
+        const result = Reference.buildFromContext("MAT001001");
+        expect(result.book).toEqual("MAT");
         expect(result.chapter).toEqual(1);
         expect(result.verse).toEqual(1);
     });
 
-    it('parses a large context', () => {
-        const result = Reference.buildFromContext('MAT123456');
-        expect(result.book).toEqual('MAT');
+    it("parses a large context", () => {
+        const result = Reference.buildFromContext("MAT123456");
+        expect(result.book).toEqual("MAT");
         expect(result.chapter).toEqual(123);
         expect(result.verse).toEqual(456);
     });
 
-    it('parses an invalid context', () => {
+    it("parses an invalid context", () => {
         expect(() => {
-            Reference.buildFromContext('MAT')
+            Reference.buildFromContext("MAT");
         }).toThrow();
     });
 
-    it('renders as a string', () => {
-        const reference = new Reference('GEN', 1, 1);
-        expect(reference.toString()).toEqual('GEN 1:1');
-        expect(`${reference}`).toEqual('GEN 1:1');
-    })
+    it("renders as a string", () => {
+        const reference = new Reference("GEN", 1, 1);
+        expect(reference.toString()).toEqual("GEN 1:1");
+        expect(`${reference}`).toEqual("GEN 1:1");
+    });
 });
