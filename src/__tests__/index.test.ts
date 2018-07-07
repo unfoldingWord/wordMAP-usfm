@@ -1,9 +1,11 @@
-import {toUSFM3} from '../index';
+import {Reference, toUSFM3} from '../index';
 
 describe('to usfm', () => {
     it('has no usfm or alignment data', () => {
         const usfm = '';
-        const alignments = {};
+        const alignments = {
+            sentences: []
+        };
         expect(toUSFM3(alignments, usfm)).toEqual(usfm);
     });
 
@@ -37,7 +39,9 @@ describe('to usfm', () => {
 \\w of|\\w*
 \\zaln-e\\*
 `;
-        const alignments = {};
+        const alignments = {
+            sentences: []
+        };
         expect(toUSFM3(alignments, usfm)).toEqual(usfm);
     });
 
@@ -46,53 +50,114 @@ describe('to usfm', () => {
 \\h Titus
 
 \\s5
-\\c 3
+\\c 1
 \\p
-\\v 15
+\\v 1
 \\w Speak|x-occurrence="1" x-occurrences="1"\\w*
 \\w of|x-occurrence="1" x-occurrences="1"\\w*
 `;
-        // TODO: build a sample alignment structure
         const alignments = {
+            metadata: {
+                target: {
+                    languageCode: 'en'
+                }
+            },
             sentences: [
                 {
+                    target: {
+                        tokens: [
+                            {
+                                text: "Speak",
+                                occurrence: 1,
+                                occurrences: 1
+                            },
+                            {
+                                text: "of",
+                                occurrence: 1,
+                                occurrences: 1
+                            }
+                        ],
+                        metadata: {
+                            contextId: "MAT001001"
+                        }
+                    },
                     source: {
                         tokens: [
-
-                        ]
-                    },
-                    target: {
-                        tokens: []
+                            {
+                                text: "kaepS",
+                                occurrence: 1,
+                                occurrences: 1
+                            },
+                            {
+                                text: "fo",
+                                occurrence: 1,
+                                occurrences: 1
+                            }
+                        ],
+                        metadata: {
+                            contextId: "MAT001001"
+                        }
                     },
                     alignments: [
                         {
-                            sourceNgram: [],
-                            targetNgram: []
+                            sourceNgram: [0],
+                            targetNgram: [0]
                         },
                         {
-                            sourceNgram: [],
-                            targetNgram: []
+                            sourceNgram: [1],
+                            targetNgram: [1]
                         }
                     ]
                 }
             ]
         };
-        // TODO: update to contain expected data
         const expected = `\\id TIT EN_ULB en_English_ltr Thu Jul 05 2018 15:43:08 GMT-0700 (PDT) tc
 \\h Titus
 
 \\s5
-\\c 3
+\\c 1
 \\p
-\\v 15
+\\v 1
+\\zaln-s | x-content="kaepS"
 \\w Speak|x-occurrence="1" x-occurrences="1"\\w*
+\\zaln-e\\*
+\\zaln-s | x-content="fo"
 \\w of|x-occurrence="1" x-occurrences="1"\\w*
+\\zaln-e\\*
 `;
-        expect(toUSFM3(alignments, usfm)).toEqual(usfm);
+        expect(toUSFM3(alignments, usfm)).toEqual(expected);
     });
 
     // TODO: test alignment for half the verse
     // TODO: test alignment across verses
     // TODO: test alignment across chapters
     // TODO: test alignment for multiple verses
+});
+
+describe('Reference', () => {
+    it('parses a context', () => {
+        const result = Reference.buildFromContext('MAT001001');
+        expect(result.book).toEqual('MAT');
+        expect(result.chapter).toEqual(1);
+        expect(result.verse).toEqual(1);
+    });
+
+    it('parses a large context', () => {
+        const result = Reference.buildFromContext('MAT123456');
+        expect(result.book).toEqual('MAT');
+        expect(result.chapter).toEqual(123);
+        expect(result.verse).toEqual(456);
+    });
+
+    it('parses an invalid context', () => {
+        expect(() => {
+            Reference.buildFromContext('MAT')
+        }).toThrow();
+    });
+
+    it('renders as a string', () => {
+        const reference = new Reference('GEN', 1, 1);
+        expect(reference.toString()).toEqual('GEN 1:1');
+        expect(`${reference}`).toEqual('GEN 1:1');
+    })
 });
