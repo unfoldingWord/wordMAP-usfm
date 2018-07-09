@@ -65,35 +65,13 @@ describe("to usfm", () => {
             sentences: [
                 {
                     target: {
-                        tokens: [
-                            {
-                                text: "Speak",
-                                occurrence: 1,
-                                occurrences: 1
-                            },
-                            {
-                                text: "of",
-                                occurrence: 1,
-                                occurrences: 1
-                            }
-                        ],
+                        tokens: tokenize("Speak of"),
                         metadata: {
                             contextId: "MAT001001"
                         }
                     },
                     source: {
-                        tokens: [
-                            {
-                                text: "kaepS",
-                                occurrence: 1,
-                                occurrences: 1
-                            },
-                            {
-                                text: "fo",
-                                occurrence: 1,
-                                occurrences: 1
-                            }
-                        ],
+                        tokens: tokenize("kaepS fo"),
                         metadata: {
                             contextId: "MAT001001"
                         }
@@ -129,10 +107,251 @@ describe("to usfm", () => {
         expect(toUSFM3(alignments, usfm)).toEqual(expected);
     });
 
-    // TODO: test alignment for half the verse
-    // TODO: test alignment across verses
-    // TODO: test alignment across chapters
-    // TODO: test alignment for multiple verses
+    it("aligns part of the verse verse", () => {
+        const usfm = `\\id TIT EN_ULB en_English_ltr Thu Jul 05 2018 15:43:08 GMT-0700 (PDT) tc
+\\h Titus
+
+\\s5
+\\c 1
+\\p
+\\v 1
+\\w Speak|x-occurrence="1" x-occurrences="1"\\w*
+\\w of|x-occurrence="1" x-occurrences="1"\\w*
+`;
+        const alignments = {
+            metadata: {
+                target: {
+                    languageCode: "en"
+                }
+            },
+            sentences: [
+                {
+                    target: {
+                        tokens: tokenize("Speak"),
+                        metadata: {
+                            contextId: "MAT001001"
+                        }
+                    },
+                    source: {
+                        tokens: tokenize("kaepS"),
+                        metadata: {
+                            contextId: "MAT001001"
+                        }
+                    },
+                    alignments: [
+                        {
+                            sourceNgram: [0],
+                            targetNgram: [0]
+                        }
+                    ]
+                }
+            ]
+        };
+        const expected = `\\id TIT EN_ULB en_English_ltr Thu Jul 05 2018 15:43:08 GMT-0700 (PDT) tc
+\\h Titus
+
+\\s5
+\\c 1
+\\p
+\\v 1
+\\zaln-s | x-content="kaepS"
+\\w Speak|x-occurrence="1" x-occurrences="1"\\w*
+\\zaln-e\\*
+\\w of|x-occurrence="1" x-occurrences="1"\\w*
+`;
+        expect(toUSFM3(alignments, usfm)).toEqual(expected);
+    });
+
+    it("aligns several verses", () => {
+        const usfm = `\\id TIT EN_ULB en_English_ltr Thu Jul 05 2018 15:43:08 GMT-0700 (PDT) tc
+\\h Titus
+
+\\s5
+\\c 1
+\\p
+\\v 1
+\\w Speak|x-occurrence="1" x-occurrences="1"\\w*
+\\v 2
+\\w of|x-occurrence="1" x-occurrences="1"\\w*
+`;
+        const alignments = {
+            metadata: {
+                target: {
+                    languageCode: "en"
+                }
+            },
+            sentences: [
+                {
+                    target: {
+                        tokens: tokenize("Speak"),
+                        metadata: {
+                            contextId: "MAT001001"
+                        }
+                    },
+                    source: {
+                        tokens: tokenize("kaepS"),
+                        metadata: {
+                            contextId: "MAT001001"
+                        }
+                    },
+                    alignments: [
+                        {
+                            sourceNgram: [0],
+                            targetNgram: [0]
+                        }
+                    ]
+                },
+                {
+                    target: {
+                        tokens: tokenize("of"),
+                        metadata: {
+                            contextId: "MAT001002"
+                        }
+                    },
+                    source: {
+                        tokens: tokenize("fo"),
+                        metadata: {
+                            contextId: "MAT001002"
+                        }
+                    },
+                    alignments: [
+                        {
+                            sourceNgram: [0],
+                            targetNgram: [0]
+                        }
+                    ]
+                }
+            ]
+        };
+        const expected = `\\id TIT EN_ULB en_English_ltr Thu Jul 05 2018 15:43:08 GMT-0700 (PDT) tc
+\\h Titus
+
+\\s5
+\\c 1
+\\p
+\\v 1
+\\zaln-s | x-content="kaepS"
+\\w Speak|x-occurrence="1" x-occurrences="1"\\w*
+\\zaln-e\\*
+
+\\v 2
+\\zaln-s | x-content="fo"
+\\w of|x-occurrence="1" x-occurrences="1"\\w*
+\\zaln-e\\*
+
+`;
+        expect(toUSFM3(alignments, usfm)).toEqual(expected);
+    });
+
+    it("aligns multiple source tokens", () => {
+        const usfm = `\\id TIT EN_ULB en_English_ltr Thu Jul 05 2018 15:43:08 GMT-0700 (PDT) tc
+\\h Titus
+
+\\s5
+\\c 1
+\\p
+\\v 1
+\\w hello|x-occurrence="1" x-occurrences="1"\\w*
+`;
+        const alignments = {
+            metadata: {
+                target: {
+                    languageCode: "en"
+                }
+            },
+            sentences: [
+                {
+                    target: {
+                        tokens: tokenize("hello"),
+                        metadata: {
+                            contextId: "MAT001001"
+                        }
+                    },
+                    source: {
+                        tokens: tokenize("olleh dlrow"),
+                        metadata: {
+                            contextId: "MAT001001"
+                        }
+                    },
+                    alignments: [
+                        {
+                            sourceNgram: [0, 1],
+                            targetNgram: [0]
+                        }
+                    ]
+                }
+            ]
+        };
+        const expected = `\\id TIT EN_ULB en_English_ltr Thu Jul 05 2018 15:43:08 GMT-0700 (PDT) tc
+\\h Titus
+
+\\s5
+\\c 1
+\\p
+\\v 1
+\\zaln-s | x-content="olleh dlrow"
+\\w hello|x-occurrence="1" x-occurrences="1"\\w*
+\\zaln-e\\*
+
+`;
+        expect(toUSFM3(alignments, usfm)).toEqual(expected);
+    });
+
+    it("aligns multiple target tokens", () => {
+        const usfm = `\\id TIT EN_ULB en_English_ltr Thu Jul 05 2018 15:43:08 GMT-0700 (PDT) tc
+\\h Titus
+
+\\s5
+\\c 1
+\\p
+\\v 1
+\\w hello|x-occurrence="1" x-occurrences="1"\\w*
+\\w world|x-occurrence="1" x-occurrences="1"\\w*
+`;
+        const alignments = {
+            metadata: {
+                target: {
+                    languageCode: "en"
+                }
+            },
+            sentences: [
+                {
+                    target: {
+                        tokens: tokenize("hello world"),
+                        metadata: {
+                            contextId: "MAT001001"
+                        }
+                    },
+                    source: {
+                        tokens: tokenize("olleh"),
+                        metadata: {
+                            contextId: "MAT001001"
+                        }
+                    },
+                    alignments: [
+                        {
+                            sourceNgram: [0],
+                            targetNgram: [0, 1]
+                        }
+                    ]
+                }
+            ]
+        };
+        const expected = `\\id TIT EN_ULB en_English_ltr Thu Jul 05 2018 15:43:08 GMT-0700 (PDT) tc
+\\h Titus
+
+\\s5
+\\c 1
+\\p
+\\v 1
+\\zaln-s | x-content="olleh"
+\\w hello|x-occurrence="1" x-occurrences="1"\\w*
+\\w world|x-occurrence="1" x-occurrences="1"\\w*
+\\zaln-e\\*
+
+`;
+        expect(toUSFM3(alignments, usfm)).toEqual(expected);
+    });
 });
 
 describe("Reference", () => {
@@ -162,3 +381,22 @@ describe("Reference", () => {
         expect(`${reference}`).toEqual("GEN 1:1");
     });
 });
+
+/**
+ * Tokenizes a string.
+ * TRICKY: this will not properly handle occurrences.
+ * @param str
+ * @return {any[]}
+ */
+const tokenize = (str: string) => {
+    const tokens = [];
+    const words = str.trim().split(" ");
+    for (const w of words) {
+        tokens.push({
+            text: w,
+            occurrence: 1,
+            occurrences: 1
+        });
+    }
+    return tokens;
+};
