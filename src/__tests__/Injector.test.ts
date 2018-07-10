@@ -1,4 +1,4 @@
-import {toUSFM3} from "../index";
+import {toUSFM3} from "../Injector";
 
 describe("to usfm", () => {
     it("has no usfm or alignment data", () => {
