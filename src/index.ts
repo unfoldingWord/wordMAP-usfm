@@ -1,44 +1,16 @@
 // @ts-ignore
 import * as usfmjs from "usfm-js";
-
-/**
- * Represents a passage reference
- */
-export class Reference {
-    readonly book: string;
-    readonly chapter: number;
-    readonly verse: number;
-
-    constructor(book: string, chapter: number, verse: number) {
-        this.book = book;
-        this.chapter = chapter;
-        this.verse = verse;
-    }
-
-    static buildFromContext(contextId: string) {
-        if (contextId.length !== 9) {
-            throw new Error("Context id must be 9 characters long");
-        }
-
-        const book = contextId.substring(0, 3);
-        const chapter = Number.parseInt(contextId.substring(3, 6));
-        const verse = Number.parseInt(contextId.substring(6, 9));
-        return new Reference(book, chapter, verse);
-    }
-
-    toString(): string {
-        return `${this.book} ${this.chapter}:${this.verse}`;
-    }
-}
+import Reference from "./Reference";
+import AlignedSentence from "./AlignedSentence";
 
 export function toUSFM3(alignments: any, usfm: string): string {
     const usfmObject = usfmjs.toJSON(usfm);
 
     // TODO: add alignment data to usfm
-    if(alignments) {
+    if (alignments) {
         for (const verseId of Object.keys(alignments.sentences)) {
-            const verse = alignments.sentences[verseId];
-            const reference = Reference.buildFromContext(verse.target.metadata.contextId);
+            const sentence = AlignedSentence.fromJson(alignments.sentences[verseId]);
+            const reference = Reference.buildFromContext(sentence.target.context);
 
             const cId = reference.chapter.toString();
             const vId = reference.verse.toString();
@@ -46,7 +18,7 @@ export function toUSFM3(alignments: any, usfm: string): string {
             // look up verse
             if (Object.keys(usfmObject.chapters).indexOf(cId) >= 0 && Object.keys(usfmObject.chapters[cId]).indexOf(vId) >= 0) {
                 // apply alignments
-                usfmObject.chapters[cId][vId] = alignVerse(usfmObject.chapters[cId][vId], verse);
+                usfmObject.chapters[cId][vId] = alignVerse(usfmObject.chapters[cId][vId], sentence);
             } else {
                 console.warn(`${reference} not found in usfm`);
             }
@@ -62,12 +34,12 @@ export function toUSFM3(alignments: any, usfm: string): string {
  * @param verse
  * @return {number}
  */
-function findAlignment(verseObj: any, verse: any): number {
-    for(const alignmentIndex of Object.keys(verse.alignments)) {
-        const alignment = verse.alignments[alignmentIndex];
+function findAlignment(verseObj: any, verse: AlignedSentence): number {
+    for (const alignmentIndex of Object.keys(verse.alignments)) {
+        const alignment = verse.alignments[parseInt(alignmentIndex)];
         for (const tokenId of alignment.targetNgram) {
             const token = verse.target.tokens[tokenId];
-            if(verseObj.text == token.text
+            if (verseObj.text == token.text
                 && verseObj.occurrence == token.occurrence
                 && verseObj.occurrences == token.occurrences) {
                 return Number.parseInt(alignmentIndex);
@@ -117,7 +89,7 @@ function verseObjectComparator(a: any, b: any) {
  * @return {number}
  */
 function getVerseObjectSortKey(obj: any): number {
-    if(obj.children && obj.children.length) {
+    if (obj.children && obj.children.length) {
         return getVerseObjectSortKey(obj.children[0]);
     } else {
         return obj.position;
@@ -129,9 +101,9 @@ function getVerseObjectSortKey(obj: any): number {
  * @param verseObjects
  */
 function cleanSortingKey(verseObjects: any) {
-    for(const obj of verseObjects) {
+    for (const obj of verseObjects) {
         delete obj.position;
-        if(obj.children) {
+        if (obj.children) {
             cleanSortingKey(obj.children);
         }
     }
@@ -140,28 +112,29 @@ function cleanSortingKey(verseObjects: any) {
 /**
  * Injects alignments into a verse
  * @param usfm
- * @param verse
+ * @param sentence
  */
-export function alignVerse(usfm: any, verse: any) {
+export function alignVerse(usfm: any, sentence: AlignedSentence) {
     // TODO: validate target tokens.
     // if the usfm tokens to not match the target tokens this is an exception!
+
 
     const unusedObjects = [];
     const alignedObjects: any = {};
 
-    for(const objIndex of Object.keys(usfm.verseObjects)) {
+    for (const objIndex of Object.keys(usfm.verseObjects)) {
         const obj = usfm.verseObjects[objIndex];
         obj.position = objIndex;
-        if(obj.type !== "word") {
+        if (obj.type !== "word") {
             unusedObjects.push(obj);
             continue;
         }
-        const alignmentIndex = findAlignment(obj, verse);
-        if(alignmentIndex >= 0) {
+        const alignmentIndex = findAlignment(obj, sentence);
+        if (alignmentIndex >= 0) {
             // add to alignment
-            if(!alignedObjects[alignmentIndex]) {
+            if (!alignedObjects[alignmentIndex]) {
                 alignedObjects[alignmentIndex] = {
-                    content: getAlignmentTitle(verse, alignmentIndex),
+                    content: getAlignmentTitle(sentence, alignmentIndex),
                     tag: "zaln",
                     type: "milestone",
                     children: []
@@ -175,8 +148,9 @@ export function alignVerse(usfm: any, verse: any) {
         }
     }
 
-    const alignedUSFM = [...unusedObjects, ...Object.keys(alignedObjects).map(key=>alignedObjects[key])];
+    const alignedUSFM = [...unusedObjects, ...Object.keys(alignedObjects).map(key => alignedObjects[key])];
     alignedUSFM.sort(verseObjectComparator);
     cleanSortingKey(alignedUSFM);
     return alignedUSFM;
 }
+
