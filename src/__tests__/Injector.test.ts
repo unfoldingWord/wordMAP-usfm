@@ -1,4 +1,4 @@
-import {toUSFM3} from "../Injector";
+import {alignUSFM3} from "../Injector";
 
 describe("to usfm", () => {
     it("has no usfm or alignment data", () => {
@@ -6,7 +6,7 @@ describe("to usfm", () => {
         const alignments = {
             sentences: []
         };
-        expect(toUSFM3(alignments, usfm)).toEqual(usfm);
+        expect(alignUSFM3(alignments, usfm)).toEqual(usfm);
     });
 
     it("has no alignment data", () => {
@@ -42,7 +42,7 @@ describe("to usfm", () => {
         const alignments = {
             sentences: []
         };
-        expect(toUSFM3(alignments, usfm)).toEqual(usfm);
+        expect(alignUSFM3(alignments, usfm)).toEqual(usfm);
     });
 
     it("aligns the entire verse", () => {
@@ -104,7 +104,7 @@ describe("to usfm", () => {
 \\zaln-e\\*
 
 `;
-        expect(toUSFM3(alignments, usfm)).toEqual(expected);
+        expect(alignUSFM3(alignments, usfm)).toEqual(expected);
     });
 
     it("aligns part of the verse verse", () => {
@@ -159,7 +159,7 @@ describe("to usfm", () => {
 \\zaln-e\\*
 \\w of|x-occurrence="1" x-occurrences="1"\\w*
 `;
-        expect(toUSFM3(alignments, usfm)).toEqual(expected);
+        expect(alignUSFM3(alignments, usfm)).toEqual(expected);
     });
 
     it("aligns several verses", () => {
@@ -240,7 +240,7 @@ describe("to usfm", () => {
 \\zaln-e\\*
 
 `;
-        expect(toUSFM3(alignments, usfm)).toEqual(expected);
+        expect(alignUSFM3(alignments, usfm)).toEqual(expected);
     });
 
     it("aligns multiple source tokens", () => {
@@ -294,7 +294,7 @@ describe("to usfm", () => {
 \\zaln-e\\*
 
 `;
-        expect(toUSFM3(alignments, usfm)).toEqual(expected);
+        expect(alignUSFM3(alignments, usfm)).toEqual(expected);
     });
 
     it("aligns multiple target tokens", () => {
@@ -350,7 +350,7 @@ describe("to usfm", () => {
 \\zaln-e\\*
 
 `;
-        expect(toUSFM3(alignments, usfm)).toEqual(expected);
+        expect(alignUSFM3(alignments, usfm)).toEqual(expected);
     });
 });
 

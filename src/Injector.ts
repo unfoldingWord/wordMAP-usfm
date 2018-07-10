@@ -3,7 +3,13 @@ import * as usfmjs from "usfm-js";
 import Reference from "./Reference";
 import AlignedSentence, {Token} from "./AlignedSentence";
 
-export function toUSFM3(alignments: any, usfm: string): string {
+/**
+ * Injects alignments into the usfm
+ * @param alignments
+ * @param {string} usfm
+ * @return {string}
+ */
+export function alignUSFM3(alignments: any, usfm: string): string {
     const usfmObject = usfmjs.toJSON(usfm);
 
     if (alignments) {
