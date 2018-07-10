@@ -6,7 +6,6 @@ import AlignedSentence, {Token} from "./AlignedSentence";
 export function toUSFM3(alignments: any, usfm: string): string {
     const usfmObject = usfmjs.toJSON(usfm);
 
-    // TODO: add alignment data to usfm
     if (alignments) {
         for (const verseId of Object.keys(alignments.sentences)) {
             const sentence = AlignedSentence.fromJson(alignments.sentences[verseId]);
