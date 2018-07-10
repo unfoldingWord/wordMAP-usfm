@@ -1,6 +1,6 @@
 {
   "name": "word-map-usfm",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "A utility for injecting alignment data into USFM3 files",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -10,7 +10,7 @@
     "test": "npm run lint && jest",
     "prebuild": "rm -rf dist",
     "build": "tsc",
-    "postbuild": "cp -rf package.json dist && cp -rf README.md dist",
+    "postbuild": "cp -rf package.json dist && cp -rf README.md dist &&  cp -rf LICENSE dist && cp -rf bin dist",
     "prepare": "if [ -d './src/' ]; then npm run build && cp -r ./dist/* . && rm -rf ./dist; fi",
     "dist": "npm test && npm run build && cd dist && npm publish"
   },
