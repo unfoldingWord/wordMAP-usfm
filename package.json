@@ -1,6 +1,6 @@
 {
   "name": "word-map-usfm",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "A utility for injecting alignment data into USFM3 files",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -15,7 +15,7 @@
     "dist": "npm test && npm run build && cd dist && npm publish"
   },
   "bin": {
-    "wordmap-usfm": "bin/magicli.js"
+    "word-map-usfm": "bin/magicli.js"
   },
   "jest": {
     "moduleFileExtensions": [
