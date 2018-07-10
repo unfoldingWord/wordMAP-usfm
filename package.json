@@ -1,8 +1,9 @@
 {
   "name": "word-map-usfm",
   "version": "0.1.0",
-  "description": "A utility for converting wordMAP output to usfm",
+  "description": "A utility for injecting alignment data into USFM3 files",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "lint": "tslint -c tslint.json src/**/*.ts",
     "docs": "typedoc --out docs --mode modules --target ES6",
