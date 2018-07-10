@@ -127,7 +127,7 @@ describe("to usfm", () => {
             sentences: [
                 {
                     target: {
-                        tokens: tokenize("Speak"),
+                        tokens: tokenize("Speak of"),
                         metadata: {
                             contextId: "MAT001001"
                         }

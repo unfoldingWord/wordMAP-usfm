@@ -1,7 +1,7 @@
 // @ts-ignore
 import * as usfmjs from "usfm-js";
 import Reference from "./Reference";
-import AlignedSentence from "./AlignedSentence";
+import AlignedSentence, {Token} from "./AlignedSentence";
 
 export function toUSFM3(alignments: any, usfm: string): string {
     const usfmObject = usfmjs.toJSON(usfm);
@@ -115,12 +115,10 @@ function cleanSortingKey(verseObjects: any) {
  * @param sentence
  */
 export function alignVerse(usfm: any, sentence: AlignedSentence) {
-    // TODO: validate target tokens.
-    // if the usfm tokens to not match the target tokens this is an exception!
-
 
     const unusedObjects = [];
     const alignedObjects: any = {};
+    const usfmTokens = [];
 
     for (const objIndex of Object.keys(usfm.verseObjects)) {
         const obj = usfm.verseObjects[objIndex];
@@ -129,6 +127,7 @@ export function alignVerse(usfm: any, sentence: AlignedSentence) {
             unusedObjects.push(obj);
             continue;
         }
+        usfmTokens.push(new Token(obj.text, parseInt(obj.occurrence), parseInt(obj.occurrences)));
         const alignmentIndex = findAlignment(obj, sentence);
         if (alignmentIndex >= 0) {
             // add to alignment
@@ -147,6 +146,18 @@ export function alignVerse(usfm: any, sentence: AlignedSentence) {
             unusedObjects.push(obj);
         }
     }
+
+    // validate tokens
+    if (usfmTokens.length !== sentence.target.tokens.length) {
+        throw new Error(`Sentence tokens do not match in ${sentence.target.context}`);
+    } else {
+        for (let i = 0; i < usfmTokens.length; i++) {
+            if (!usfmTokens[i].equals(sentence.target.tokens[i])) {
+                throw new Error(`Sentence tokens do not match in ${sentence.target.context}`);
+            }
+        }
+    }
+
 
     const alignedUSFM = [...unusedObjects, ...Object.keys(alignedObjects).map(key => alignedObjects[key])];
     alignedUSFM.sort(verseObjectComparator);

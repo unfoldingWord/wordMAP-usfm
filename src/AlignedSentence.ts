@@ -11,6 +11,15 @@ export class Token {
         this.occurrence = occurrence;
         this.occurrences = occurrences;
     }
+
+    /**
+     * Checks if this token equals another one.
+     * @param {Token} token
+     * @return {boolean}
+     */
+    equals(token: Token): boolean {
+        return token.text === this.text && token.occurrence === this.occurrence && token.occurrences === this.occurrences;
+    }
 }
 
 /**
