@@ -24,7 +24,8 @@ const alignedUSFM = align(alignmentData, usfmData);
 
 ### Alignment JSON Data Structure
 The intent is to have a single file as input that allows full round trip conversion to USFM 3 without any loss.
-The first resource is intended to be the source/primary text, the second resource is the one that is the target language of the USFM file. 
+One of the resources is intended to be the source/primary text, the second resource is the one that is the target language of the USFM file. The target language is what would typically be shown in the USFM file without any alignment data.
+
 In theory the data structure is extensible to allow for other metadata per word or token and potentially more than two languages although that may not lend itself well to USFM.
 
 #### Top level attributes
