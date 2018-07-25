@@ -138,6 +138,8 @@ Each alignment is an object with the attributes of `score:Float`, `verified:Bool
 - The `verified` attribute holds the boolean of whether or not the alignment was generated or approved by a human.
 - The remaining attributes hold an array of indexes that correspond to their string conterparts in the `segments[n].resources[key].tokens` in the respective `key` of the array.
 
+The example below shows many to many, many to one, one to many, one to one, none to many, one to none, one to many verified, and many to one verified in a respective order. The non-verified are machine aligned and verified are human aligned or confirmed.
+
 ```json
       "alignments": [
         {
