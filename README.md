@@ -22,7 +22,7 @@ const alignedUSFM = align(alignmentData, usfmData);
 
 ## Input
 
-### JSON Data Structure
+### Alignment JSON Data Structure
 The intent is to have a single file as input that allows full round trip conversion to USFM 3 without any loss.
 The first resource is intended to be the source/primary text, the second resource is the one that is the target language of the USFM file. 
 In theory the data structure is extensible to allow for other metadata per word or token and potentially more than two languages although that may not lend itself well to USFM.
