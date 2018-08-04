@@ -19,37 +19,37 @@
     {
       "resources": {
         "r0": {
-        "text": "Βίβλος γενέσεως Ἰησοῦ Χριστοῦ υἱοῦ Δαυὶδ υἱοῦ Ἀβραάμ.",
-        "tokens": ["Βίβλος", "γενέσεως", "Ἰησοῦ", "Χριστοῦ", "υἱοῦ", "Δαυὶδ", "υἱοῦ", "Ἀβραάμ"],
-        "metadata": {
-        "contextId": "MAT001001"
-        }
+          "text": "Βίβλος γενέσεως Ἰησοῦ Χριστοῦ υἱοῦ Δαυὶδ υἱοῦ Ἀβραάμ.",
+          "tokens": ["Βίβλος", "γενέσεως", "Ἰησοῦ", "Χριστοῦ", "υἱοῦ", "Δαυὶδ", "υἱοῦ", "Ἀβραάμ"],
+          "metadata": {
+            "contextId": "MAT001001"
+          }
         },
         "r1": {
-        "text": "The book of the genealogy of Jesus Christ, son of David, son of Abraham:",
-        "tokens": ["The", "book", "of", "the", "genealogy", "of", "Jesus", "Christ", "son", "of", "David", "son", "of", "Abraham"],
-        "metadata": {
-        "contextId": "MAT001001"
-        }
+          "text": "The book of the genealogy of Jesus Christ, son of David, son of Abraham:",
+          "tokens": ["The", "book", "of", "the", "genealogy", "of", "Jesus", "Christ", "son", "of", "David", "son", "of", "Abraham"],
+          "metadata": {
+            "contextId": "MAT001001"
+          }
         },
-      }
+      },
       "alignments": [
         {
           "score": 0.516905944153279,
-          "r0": [0, 1],
-          "r1": [1, 4],
+          "r0": [0],
+          "r1": [0, 1],
           "verified": false
         },
         {
           "score": 0.5363691430931895,
-          "r0": [1, 2],
-          "r1": [4],
+          "r0": [1],
+          "r1": [3, 4],
           "verified": false
         },
         {
           "score": 0.5372550334365089,
           "r0": [2],
-          "r1": [6, 7],
+          "r1": [6],
           "verified": false
         },
         {
@@ -60,23 +60,23 @@
         },
         {
           "score": 0.46762244230161903,
-          "r0": [],
+          "r0": [4],
           "r1": [8, 9],
           "verified": false
         },
         {
           "score": 0.5253404588058129,
           "r0": [5],
-          "r1": [],
-          "verified": true
+          "r1": [10],
+          "verified": false
         },
         {
           "r0": [6],
-          "r1": [10, 12],
+          "r1": [11, 12],
           "verified": true
         },
         {
-          "r0": [7, 9],
+          "r0": [7],
           "r1": [13],
           "verified": true
         }
