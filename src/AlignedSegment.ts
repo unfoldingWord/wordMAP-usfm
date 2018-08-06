@@ -77,7 +77,7 @@ export class Alignment {
 /**
  * Represents an aligned sentence
  */
-class AlignedSentence {
+class AlignedSegment {
     private _source: Sentence = new Sentence();
 
     get source() {
@@ -97,19 +97,22 @@ class AlignedSentence {
     }
 
     /**
-     * Loads an aligned sentence from json
+     * Loads an aligned segment from json
      * @param json
-     * @return {AlignedSentence}
+     * @return {AlignedSegment}
      */
-    static fromJson(json: any): AlignedSentence {
-        const sentence = new AlignedSentence();
-        sentence._source = Sentence.fromJson(json.source);
-        sentence._target = Sentence.fromJson(json.target);
+    static fromJson(json: any): AlignedSegment {
+        const segment = new AlignedSegment();
+        // TODO: eventually we will support n-resources
+        const sourceJson = json.resources.r0;
+        const targetJson = json.resources.r1;
+        segment._source = Sentence.fromJson(sourceJson);
+        segment._target = Sentence.fromJson(targetJson);
         for (const a of json.alignments) {
-            sentence._alignments.push(new Alignment(a.sourceNgram, a.targetNgram));
+            segment._alignments.push(new Alignment(a.sourceNgram, a.targetNgram));
         }
-        return sentence;
+        return segment;
     }
 }
 
-export default AlignedSentence;
+export default AlignedSegment;

@@ -1,12 +1,12 @@
-import {alignUSFM3} from "../Injector";
+import {alignUSFM} from "../Injector";
 
-describe("to usfm", () => {
+describe("align usfm3", () => {
     it("has no usfm or alignment data", () => {
         const usfm = "";
         const alignments = {
-            sentences: []
+            segments: []
         };
-        expect(alignUSFM3(alignments, usfm)).toEqual(usfm);
+        expect(alignUSFM(alignments, usfm)).toEqual(usfm);
     });
 
     it("has no alignment data", () => {
@@ -40,9 +40,9 @@ describe("to usfm", () => {
 \\zaln-e\\*
 `;
         const alignments = {
-            sentences: []
+            segments: []
         };
-        expect(alignUSFM3(alignments, usfm)).toEqual(usfm);
+        expect(alignUSFM(alignments, usfm)).toEqual(usfm);
     });
 
     it("aligns the entire verse", () => {
@@ -58,23 +58,27 @@ describe("to usfm", () => {
 `;
         const alignments = {
             metadata: {
-                target: {
-                    languageCode: "en"
+                resources: {
+                    r1: {
+                        languageCode: "en"
+                    }
                 }
             },
-            sentences: [
+            segments: [
                 {
-                    target: {
-                        tokens: tokenize("Speak of"),
-                        metadata: {
-                            contextId: "MAT001001"
-                        }
-                    },
-                    source: {
-                        tokens: tokenize("kaepS fo"),
-                        metadata: {
-                            contextId: "MAT001001"
-                        }
+                    resources: {
+                        r1: {
+                            tokens: tokenize("Speak of"),
+                            metadata: {
+                                contextId: "MAT001001"
+                            }
+                        },
+                        r0: {
+                            tokens: tokenize("kaepS fo"),
+                            metadata: {
+                                contextId: "MAT001001"
+                            }
+                        },
                     },
                     alignments: [
                         {
@@ -104,10 +108,10 @@ describe("to usfm", () => {
 \\zaln-e\\*
 
 `;
-        expect(alignUSFM3(alignments, usfm)).toEqual(expected);
+        expect(alignUSFM(alignments, usfm)).toEqual(expected);
     });
 
-    it("aligns part of the verse verse", () => {
+    it("aligns part of the verse", () => {
         const usfm = `\\id TIT EN_ULB en_English_ltr Thu Jul 05 2018 15:43:08 GMT-0700 (PDT) tc
 \\h Titus
 
@@ -120,22 +124,26 @@ describe("to usfm", () => {
 `;
         const alignments = {
             metadata: {
-                target: {
-                    languageCode: "en"
+                resources: {
+                    r1: {
+                        languageCode: "en"
+                    }
                 }
             },
-            sentences: [
+            segments: [
                 {
-                    target: {
-                        tokens: tokenize("Speak of"),
-                        metadata: {
-                            contextId: "MAT001001"
-                        }
-                    },
-                    source: {
-                        tokens: tokenize("kaepS"),
-                        metadata: {
-                            contextId: "MAT001001"
+                    resources: {
+                        r1: {
+                            tokens: tokenize("Speak of"),
+                            metadata: {
+                                contextId: "MAT001001"
+                            }
+                        },
+                        r0: {
+                            tokens: tokenize("kaepS"),
+                            metadata: {
+                                contextId: "MAT001001"
+                            }
                         }
                     },
                     alignments: [
@@ -159,7 +167,64 @@ describe("to usfm", () => {
 \\zaln-e\\*
 \\w of|x-occurrence="1" x-occurrences="1"\\w*
 `;
-        expect(alignUSFM3(alignments, usfm)).toEqual(expected);
+        expect(alignUSFM(alignments, usfm)).toEqual(expected);
+    });
+
+    it("overwrites the usfm text", () => {
+        const usfm = `\\id TIT EN_ULB en_English_ltr Thu Jul 05 2018 15:43:08 GMT-0700 (PDT) tc
+\\h Titus
+
+\\s5
+\\c 1
+\\p
+\\v 1
+`;
+        const alignments = {
+            metadata: {
+                resources: {
+                    r1: {
+                        languageCode: "en"
+                    }
+                }
+            },
+            segments: [
+                {
+                    resources: {
+                        r1: {
+                            tokens: tokenize("Speak of"),
+                            metadata: {
+                                contextId: "MAT001001"
+                            }
+                        },
+                        r0: {
+                            tokens: tokenize("kaepS"),
+                            metadata: {
+                                contextId: "MAT001001"
+                            }
+                        }
+                    },
+                    alignments: [
+                        {
+                            sourceNgram: [0],
+                            targetNgram: [0]
+                        }
+                    ]
+                }
+            ]
+        };
+        const expected = `\\id TIT EN_ULB en_English_ltr Thu Jul 05 2018 15:43:08 GMT-0700 (PDT) tc
+\\h Titus
+
+\\s5
+\\c 1
+\\p
+\\v 1
+\\zaln-s | x-content="kaepS"
+\\w Speak|x-occurrence="1" x-occurrences="1"\\w*
+\\zaln-e\\*
+\\w of|x-occurrence="1" x-occurrences="1"\\w*
+`;
+        expect(alignUSFM(alignments, usfm)).toEqual(expected);
     });
 
     it("aligns several verses", () => {
@@ -176,22 +241,26 @@ describe("to usfm", () => {
 `;
         const alignments = {
             metadata: {
-                target: {
-                    languageCode: "en"
+                resources: {
+                    r1: {
+                        languageCode: "en"
+                    }
                 }
             },
-            sentences: [
+            segments: [
                 {
-                    target: {
-                        tokens: tokenize("Speak"),
-                        metadata: {
-                            contextId: "MAT001001"
-                        }
-                    },
-                    source: {
-                        tokens: tokenize("kaepS"),
-                        metadata: {
-                            contextId: "MAT001001"
+                    resources: {
+                        r1: {
+                            tokens: tokenize("Speak"),
+                            metadata: {
+                                contextId: "MAT001001"
+                            }
+                        },
+                        r0: {
+                            tokens: tokenize("kaepS"),
+                            metadata: {
+                                contextId: "MAT001001"
+                            }
                         }
                     },
                     alignments: [
@@ -202,16 +271,18 @@ describe("to usfm", () => {
                     ]
                 },
                 {
-                    target: {
-                        tokens: tokenize("of"),
-                        metadata: {
-                            contextId: "MAT001002"
-                        }
-                    },
-                    source: {
-                        tokens: tokenize("fo"),
-                        metadata: {
-                            contextId: "MAT001002"
+                    resources: {
+                        r1: {
+                            tokens: tokenize("of"),
+                            metadata: {
+                                contextId: "MAT001002"
+                            }
+                        },
+                        r0: {
+                            tokens: tokenize("fo"),
+                            metadata: {
+                                contextId: "MAT001002"
+                            }
                         }
                     },
                     alignments: [
@@ -240,7 +311,7 @@ describe("to usfm", () => {
 \\zaln-e\\*
 
 `;
-        expect(alignUSFM3(alignments, usfm)).toEqual(expected);
+        expect(alignUSFM(alignments, usfm)).toEqual(expected);
     });
 
     it("aligns multiple source tokens", () => {
@@ -255,22 +326,26 @@ describe("to usfm", () => {
 `;
         const alignments = {
             metadata: {
-                target: {
-                    languageCode: "en"
+                resources: {
+                    r1: {
+                        languageCode: "en"
+                    }
                 }
             },
-            sentences: [
+            segments: [
                 {
-                    target: {
-                        tokens: tokenize("hello"),
-                        metadata: {
-                            contextId: "MAT001001"
-                        }
-                    },
-                    source: {
-                        tokens: tokenize("olleh dlrow"),
-                        metadata: {
-                            contextId: "MAT001001"
+                    resources: {
+                        r1: {
+                            tokens: tokenize("hello"),
+                            metadata: {
+                                contextId: "MAT001001"
+                            }
+                        },
+                        r0: {
+                            tokens: tokenize("olleh dlrow"),
+                            metadata: {
+                                contextId: "MAT001001"
+                            }
                         }
                     },
                     alignments: [
@@ -294,7 +369,7 @@ describe("to usfm", () => {
 \\zaln-e\\*
 
 `;
-        expect(alignUSFM3(alignments, usfm)).toEqual(expected);
+        expect(alignUSFM(alignments, usfm)).toEqual(expected);
     });
 
     it("aligns multiple target tokens", () => {
@@ -310,22 +385,26 @@ describe("to usfm", () => {
 `;
         const alignments = {
             metadata: {
-                target: {
-                    languageCode: "en"
+                resources: {
+                    r1: {
+                        languageCode: "en"
+                    }
                 }
             },
-            sentences: [
+            segments: [
                 {
-                    target: {
-                        tokens: tokenize("hello world"),
-                        metadata: {
-                            contextId: "MAT001001"
-                        }
-                    },
-                    source: {
-                        tokens: tokenize("olleh"),
-                        metadata: {
-                            contextId: "MAT001001"
+                    resources: {
+                        r1: {
+                            tokens: tokenize("hello world"),
+                            metadata: {
+                                contextId: "MAT001001"
+                            }
+                        },
+                        r0: {
+                            tokens: tokenize("olleh"),
+                            metadata: {
+                                contextId: "MAT001001"
+                            }
                         }
                     },
                     alignments: [
@@ -350,7 +429,7 @@ describe("to usfm", () => {
 \\zaln-e\\*
 
 `;
-        expect(alignUSFM3(alignments, usfm)).toEqual(expected);
+        expect(alignUSFM(alignments, usfm)).toEqual(expected);
     });
 });
 
