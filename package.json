@@ -10,7 +10,7 @@
     "test": "npm run lint && jest",
     "prebuild": "rm -rf dist",
     "build": "tsc",
-    "prepublish": "if [ -d './src/' ]; then npm run build; fi",
+    "prepublish": "if [ ! -d './dist/' ]; then npm run build; fi",
     "dist": "npm test && npm run build && npm publish"
   },
   "bin": {
