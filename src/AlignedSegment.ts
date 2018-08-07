@@ -74,13 +74,14 @@ export class Alignment {
     }
 
     /**
-     * Compares two alignments for sorting
+     * Compares two alignments for sorting.
+     * TRICKY: for usfm we sort alignments by the target language
      * @param a
      * @param b
      */
     static comparator(a: Alignment, b: Alignment): number {
-        if (a.sourceNgram.length && b.sourceNgram.length) {
-            return a.sourceNgram[0] - b.sourceNgram[0];
+        if (a.targetNgram.length && b.targetNgram.length) {
+            return a.targetNgram[0] - b.targetNgram[0];
         }
         return 0;
     }

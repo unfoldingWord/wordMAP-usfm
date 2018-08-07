@@ -138,7 +138,7 @@ describe("align usfm2", () => {
 \\w की|x-occurrence="3" x-occurrences="3"\\w*
 \\zaln-s | x-verified="false" x-occurrence="1" x-occurrences="1" x-content="βίβλος"
 \\zaln-s | x-verified="false" x-occurrence="1" x-occurrences="1" x-content="γενέσεως"
-\\w वंशावली|x-occurrence="1" x-occurrences="1"\\w*
+\\w वंशावली।|x-occurrence="1" x-occurrences="1"\\w*
 \\zaln-e\\*
 \\zaln-e\\*
 `;
