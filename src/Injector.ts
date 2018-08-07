@@ -44,7 +44,7 @@ function findAlignment(verseObj: any, segment: AlignedSegment): number {
         const alignment = segment.alignments[parseInt(alignmentIndex)];
         for (const tokenId of alignment.targetNgram) {
             const token = segment.target.tokens[tokenId];
-            if (verseObj.text == token.text
+            if (verseObj.text === token.toString()
                 && verseObj.occurrence == token.occurrence
                 && verseObj.occurrences == token.occurrences) {
                 return Number.parseInt(alignmentIndex);
@@ -134,7 +134,7 @@ export function alignSegment(usfm: any, segment: AlignedSegment) {
                 usfmObjects.push({
                     occurrence: token.occurrence,
                     occurrences: token.occurrences,
-                    text: token.text,
+                    text: token.toString(),
                     type: "word"
                 });
             }
@@ -147,7 +147,7 @@ export function alignSegment(usfm: any, segment: AlignedSegment) {
             children.push({
                 occurrence: token.occurrence,
                 occurrences: token.occurrences,
-                text: token.text,
+                text: token.toString(),
                 type: "word"
             });
         }
@@ -168,7 +168,7 @@ export function alignSegment(usfm: any, segment: AlignedSegment) {
             usfmObjects.push({
                 occurrence: token.occurrence,
                 occurrences: token.occurrences,
-                text: token.text,
+                text: token.toString(),
                 type: "word"
             });
         }

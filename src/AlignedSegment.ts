@@ -1,28 +1,28 @@
-import Lexer from 'wordmap-lexer';
+import Lexer, {Token} from 'wordmap-lexer';
 
-/**
- * Represents a token within a sentence
- */
-export class Token {
-    readonly text: string;
-    readonly occurrence: number;
-    readonly occurrences: number;
-
-    constructor(text: string, occurrence: number, occurrences: number) {
-        this.text = text;
-        this.occurrence = occurrence;
-        this.occurrences = occurrences;
-    }
-
-    /**
-     * Checks if this token equals another one.
-     * @param {Token} token
-     * @return {boolean}
-     */
-    equals(token: Token): boolean {
-        return token.text === this.text && token.occurrence === this.occurrence && token.occurrences === this.occurrences;
-    }
-}
+// /**
+//  * Represents a token within a sentence
+//  */
+// export class Token {
+//     readonly text: string;
+//     readonly occurrence: number;
+//     readonly occurrences: number;
+//
+//     constructor(text: string, occurrence: number, occurrences: number) {
+//         this.text = text;
+//         this.occurrence = occurrence;
+//         this.occurrences = occurrences;
+//     }
+//
+//     /**
+//      * Checks if this token equals another one.
+//      * @param {Token} token
+//      * @return {boolean}
+//      */
+//     equals(token: Token): boolean {
+//         return token.text === this.text && token.occurrence === this.occurrence && token.occurrences === this.occurrences;
+//     }
+// }
 
 /**
  * Represents a sentence
@@ -58,7 +58,7 @@ export class Sentence {
             sentence._tokens = Lexer.tokenizeWords(json.tokens);
         } else {
             for (const t of json.tokens) {
-                sentence._tokens.push(new Token(t.text, t.occurrence, t.occurrences));
+                sentence._tokens.push(new Token({text: t.text, occurrence: t.occurrence, occurrences: t.occurrences}));
             }
         }
 
@@ -136,7 +136,7 @@ class AlignedSegment {
      */
     public getAlignmentTitle(alignment: Alignment): string {
         return alignment.sourceNgram.map((i: number) => {
-            return this.source.tokens[i].text;
+            return this.source.tokens[i].toString();
         }).join(" ");
     }
 }
