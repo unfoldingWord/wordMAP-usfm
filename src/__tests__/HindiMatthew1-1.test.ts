@@ -12,7 +12,7 @@ describe("align usfm2", () => {
 \\s5
 \\c 1
 \\p
-\\v 1 The book of the genealogy of Jesus Christ, son of David, son of Abraham.
+\\v 1 अब्राहम की सन्‍तान, दाऊद की सन्‍तान, यीशु मसीह की वंशावली।
 `;
 
         const alignments = {
