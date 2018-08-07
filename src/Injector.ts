@@ -1,7 +1,7 @@
 // @ts-ignore
 import * as usfmjs from "usfm-js";
 import Reference from "./Reference";
-import AlignedSegment, {Token} from "./AlignedSegment";
+import AlignedSegment from "./AlignedSegment";
 
 /**
  * Injects alignment data into usfm
@@ -23,7 +23,7 @@ export function alignUSFM(alignments: any, usfm: string): string {
             // look up verse
             if (Object.keys(usfmObject.chapters).indexOf(cId) >= 0 && Object.keys(usfmObject.chapters[cId]).indexOf(vId) >= 0) {
                 // apply alignments
-                usfmObject.chapters[cId][vId] = alignVerse(usfmObject.chapters[cId][vId], segment);
+                usfmObject.chapters[cId][vId] = alignSegment(usfmObject.chapters[cId][vId], segment);
             } else {
                 console.warn(`${reference} not found in usfm`);
             }
@@ -119,42 +119,82 @@ function cleanSortingKey(verseObjects: any) {
  * @param usfm
  * @param segment
  */
-export function alignVerse(usfm: any, segment: AlignedSegment) {
+export function alignSegment(usfm: any, segment: AlignedSegment) {
 
-    const unusedObjects = [];
-    const alignedObjects: any = {};
-    const usfmTokens = [];
+    const usfmObjects = [];
+    let lastTargetTokenPos: number = -1;
 
-    for (const objIndex of Object.keys(usfm.verseObjects)) {
-        const obj = usfm.verseObjects[objIndex];
-        obj.position = objIndex;
-        if (obj.type !== "word") {
-            unusedObjects.push(obj);
-            continue;
-        }
-        usfmTokens.push(new Token(obj.text, parseInt(obj.occurrence), parseInt(obj.occurrences)));
-        const alignmentIndex = findAlignment(obj, segment);
-        if (alignmentIndex >= 0) {
-            // add to alignment
-            if (!alignedObjects[alignmentIndex]) {
-                alignedObjects[alignmentIndex] = {
-                    content: getAlignmentTitle(segment, alignmentIndex),
-                    tag: "zaln",
-                    type: "milestone",
-                    children: []
-                };
+    for (const alignment of segment.alignments) {
+
+        // add un-aligned target tokens
+        if (lastTargetTokenPos >= 0) {
+            while (lastTargetTokenPos < alignment.targetNgram[0] - 1) {
+                lastTargetTokenPos++;
+                const token = segment.target.tokens[lastTargetTokenPos];
+                usfmObjects.push({
+                    occurrence: token.occurrence,
+                    occurrences: token.occurrences,
+                    text: token.text,
+                    type: "word"
+                });
             }
-            alignedObjects[alignmentIndex].children.push(obj);
-            alignedObjects[alignmentIndex].children.sort(verseObjectComparator);
-        } else {
-            // add to unused
-            unusedObjects.push(obj);
         }
+
+        // collect aligned target tokens
+        const children = [];
+        for (const targetPos of alignment.targetNgram) {
+            const token = segment.target.tokens[targetPos];
+            children.push({
+                occurrence: token.occurrence,
+                occurrences: token.occurrences,
+                text: token.text,
+                type: "word"
+            });
+        }
+
+        // build milestone(s)
+        const sourceTokens = alignment.sourceNgram.map(i => segment.source.tokens[i]);
+        const usfmObj = makeMilestone(sourceTokens, children, Boolean(alignment.verified));
+        usfmObjects.push(usfmObj);
+
+        lastTargetTokenPos = alignment.targetNgram[alignment.targetNgram.length - 1];
     }
 
-    const alignedUSFM = [...unusedObjects, ...Object.keys(alignedObjects).map(key => alignedObjects[key])];
-    alignedUSFM.sort(verseObjectComparator);
-    cleanSortingKey(alignedUSFM);
-    return alignedUSFM;
+    // add remaining un-aligned target tokens
+    if (lastTargetTokenPos >= 0) {
+        while (lastTargetTokenPos < segment.target.tokens.length - 1) {
+            lastTargetTokenPos++;
+            const token = segment.target.tokens[lastTargetTokenPos];
+            usfmObjects.push({
+                occurrence: token.occurrence,
+                occurrences: token.occurrences,
+                text: token.text,
+                type: "word"
+            });
+        }
+    }
+    return usfmObjects;
 }
 
+/**
+ * Recursively generates a milestone
+ * @param sourceTokens - the source tokens
+ * @param children - the children of the milestone
+ * @param verified - indicates if the alignment has been verified
+ */
+function makeMilestone(sourceTokens: any[], children: any[], verified: boolean): any {
+    if (sourceTokens.length) {
+        const token = sourceTokens[0];
+        return {
+            verified,
+            occurrence: token.occurrence,
+            occurrences: token.occurrences,
+            content: token.text,
+            tag: "zaln",
+            type: "milestone",
+            children: makeMilestone(sourceTokens.slice(1), children, verified)
+        };
+    } else {
+        return children;
+    }
+}

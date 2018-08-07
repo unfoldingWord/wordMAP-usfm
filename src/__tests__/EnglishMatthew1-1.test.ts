@@ -113,7 +113,7 @@ describe("align usfm2", () => {
 \\c 1
 \\p
 \\v 1
-\\zaln-s | x-verified="false" x-occurrence="1" x-occurrences="1" x-content="βίβλος"
+\\zaln-s | x-verified="false" x-occurrence="1" x-occurrences="1" x-content="Βίβλος"
 \\w The|x-occurrence="1" x-occurrences="1"\\w*
 \\w book|x-occurrence="1" x-occurrences="1"\\w*
 \\zaln-e\\*
@@ -128,21 +128,21 @@ describe("align usfm2", () => {
 \\zaln-e\\*
 \\zaln-s | x-verified="false" x-occurrence="1" x-occurrences="1" x-content="Χριστοῦ"
 \\w Christ|x-occurrence="1" x-occurrences="1"\\w*
-\\zaln-e\\*,
+\\zaln-e\\*
 \\zaln-s | x-verified="false" x-occurrence="1" x-occurrences="2" x-content="υἱοῦ"
 \\w son|x-occurrence="1" x-occurrences="2"\\w*
 \\w of|x-occurrence="3" x-occurrences="4"\\w*
 \\zaln-e\\*
-\\zaln-s | x-verified="false" x-occurrence="1" x-occurrences="1" x-content="Δαυεὶδ"
+\\zaln-s | x-verified="false" x-occurrence="1" x-occurrences="1" x-content="Δαυὶδ"
 \\w David|x-occurrence="1" x-occurrences="1"\\w*
-\\zaln-e\\*,
+\\zaln-e\\*
 \\zaln-s | x-verified="true" x-occurrence="2" x-occurrences="2" x-content="υἱοῦ"
 \\w son|x-occurrence="2" x-occurrences="2"\\w*
 \\w of|x-occurrence="4" x-occurrences="4"\\w*
 \\zaln-e\\*
-\\zaln-s | x-verified="true" x-occurrence="1" x-occurrences="1" x-content="Ἀβραάμ"
+\\zaln-s | x-verified="true" x-occurrence="1" x-occurrences="1" x-content="Ἀβραάμ"
 \\w Abraham|x-occurrence="1" x-occurrences="1"\\w*
-\\zaln-e\\*.
+\\zaln-e\\*
 `;
         expect(alignUSFM(alignments, usfm)).toEqual(expected);
     });

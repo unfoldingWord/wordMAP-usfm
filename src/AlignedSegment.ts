@@ -1,3 +1,5 @@
+import Lexer from 'wordmap-lexer';
+
 /**
  * Represents a token within a sentence
  */
@@ -52,9 +54,14 @@ export class Sentence {
      */
     static fromJson(json: any): Sentence {
         const sentence = new Sentence();
-        for (const t of json.tokens) {
-            sentence._tokens.push(new Token(t.text, t.occurrence, t.occurrences));
+        if(json.tokens && json.tokens.length && typeof json.tokens[0] === 'string') {
+            sentence._tokens = Lexer.tokenizeWords(json.tokens);
+        } else {
+            for (const t of json.tokens) {
+                sentence._tokens.push(new Token(t.text, t.occurrence, t.occurrences));
+            }
         }
+
         sentence._text = json.text;
         sentence._context = json.metadata.contextId;
         return sentence;
@@ -67,10 +74,18 @@ export class Sentence {
 export class Alignment {
     readonly sourceNgram: number[];
     readonly targetNgram: number[];
+    readonly verified: boolean;
 
-    constructor(sourceNgram: number[], targetNgram: number[]) {
+    /**
+     *
+     * @param sourceNgram
+     * @param targetNgram
+     * @param verified - indicates the alignment has been verified by a human
+     */
+    constructor(sourceNgram: number[], targetNgram: number[], verified: boolean) {
         this.sourceNgram = sourceNgram;
         this.targetNgram = targetNgram;
+        this.verified = verified;
     }
 }
 
@@ -104,14 +119,25 @@ class AlignedSegment {
     static fromJson(json: any): AlignedSegment {
         const segment = new AlignedSegment();
         // TODO: eventually we will support n-resources
+        // for now r0 is the source and r1 is the target
         const sourceJson = json.resources.r0;
         const targetJson = json.resources.r1;
         segment._source = Sentence.fromJson(sourceJson);
         segment._target = Sentence.fromJson(targetJson);
         for (const a of json.alignments) {
-            segment._alignments.push(new Alignment(a.sourceNgram, a.targetNgram));
+            segment._alignments.push(new Alignment(a.r0, a.r1, Boolean(a.verified)));
         }
         return segment;
+    }
+
+    /**
+     * Returns the title of an alignment
+     * @param index
+     */
+    public getAlignmentTitle(alignment: Alignment): string {
+        return alignment.sourceNgram.map((i: number) => {
+            return this.source.tokens[i].text;
+        }).join(" ");
     }
 }
 

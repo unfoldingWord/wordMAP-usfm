@@ -82,12 +82,12 @@ describe("align usfm3", () => {
                     },
                     alignments: [
                         {
-                            sourceNgram: [0],
-                            targetNgram: [0]
+                            r0: [0],
+                            r1: [0]
                         },
                         {
-                            sourceNgram: [1],
-                            targetNgram: [1]
+                            r0: [1],
+                            r1: [1]
                         }
                     ]
                 }
@@ -100,13 +100,12 @@ describe("align usfm3", () => {
 \\c 1
 \\p
 \\v 1
-\\zaln-s | x-content="kaepS"
+\\zaln-s | x-verified="false" x-occurrence="1" x-occurrences="1" x-content="kaepS"
 \\w Speak|x-occurrence="1" x-occurrences="1"\\w*
 \\zaln-e\\*
-\\zaln-s | x-content="fo"
+\\zaln-s | x-verified="false" x-occurrence="1" x-occurrences="1" x-content="fo"
 \\w of|x-occurrence="1" x-occurrences="1"\\w*
 \\zaln-e\\*
-
 `;
         expect(alignUSFM(alignments, usfm)).toEqual(expected);
     });
@@ -120,8 +119,7 @@ describe("align usfm3", () => {
 \\p
 \\v 1
 \\w Speak|x-occurrence="1" x-occurrences="1"\\w*
-\\w of|x-occurrence="1" x-occurrences="1"\\w*
-`;
+\\w of|x-occurrence="1" x-occurrences="1"\\w*`;
         const alignments = {
             metadata: {
                 resources: {
@@ -148,8 +146,8 @@ describe("align usfm3", () => {
                     },
                     alignments: [
                         {
-                            sourceNgram: [0],
-                            targetNgram: [0]
+                            r0: [0],
+                            r1: [0]
                         }
                     ]
                 }
@@ -162,11 +160,10 @@ describe("align usfm3", () => {
 \\c 1
 \\p
 \\v 1
-\\zaln-s | x-content="kaepS"
+\\zaln-s | x-verified="false" x-occurrence="1" x-occurrences="1" x-content="kaepS"
 \\w Speak|x-occurrence="1" x-occurrences="1"\\w*
 \\zaln-e\\*
-\\w of|x-occurrence="1" x-occurrences="1"\\w*
-`;
+\\w of|x-occurrence="1" x-occurrences="1"\\w*`;
         expect(alignUSFM(alignments, usfm)).toEqual(expected);
     });
 
@@ -205,8 +202,8 @@ describe("align usfm3", () => {
                     },
                     alignments: [
                         {
-                            sourceNgram: [0],
-                            targetNgram: [0]
+                            r0: [0],
+                            r1: [0]
                         }
                     ]
                 }
@@ -219,11 +216,10 @@ describe("align usfm3", () => {
 \\c 1
 \\p
 \\v 1
-\\zaln-s | x-content="kaepS"
+\\zaln-s | x-verified="false" x-occurrence="1" x-occurrences="1" x-content="kaepS"
 \\w Speak|x-occurrence="1" x-occurrences="1"\\w*
 \\zaln-e\\*
-\\w of|x-occurrence="1" x-occurrences="1"\\w*
-`;
+\\w of|x-occurrence="1" x-occurrences="1"\\w*`;
         expect(alignUSFM(alignments, usfm)).toEqual(expected);
     });
 
@@ -265,8 +261,8 @@ describe("align usfm3", () => {
                     },
                     alignments: [
                         {
-                            sourceNgram: [0],
-                            targetNgram: [0]
+                            r0: [0],
+                            r1: [0]
                         }
                     ]
                 },
@@ -287,8 +283,8 @@ describe("align usfm3", () => {
                     },
                     alignments: [
                         {
-                            sourceNgram: [0],
-                            targetNgram: [0]
+                            r0: [0],
+                            r1: [0]
                         }
                     ]
                 }
@@ -301,15 +297,13 @@ describe("align usfm3", () => {
 \\c 1
 \\p
 \\v 1
-\\zaln-s | x-content="kaepS"
+\\zaln-s | x-verified="false" x-occurrence="1" x-occurrences="1" x-content="kaepS"
 \\w Speak|x-occurrence="1" x-occurrences="1"\\w*
 \\zaln-e\\*
-
 \\v 2
-\\zaln-s | x-content="fo"
+\\zaln-s | x-verified="false" x-occurrence="1" x-occurrences="1" x-content="fo"
 \\w of|x-occurrence="1" x-occurrences="1"\\w*
 \\zaln-e\\*
-
 `;
         expect(alignUSFM(alignments, usfm)).toEqual(expected);
     });
@@ -350,8 +344,8 @@ describe("align usfm3", () => {
                     },
                     alignments: [
                         {
-                            sourceNgram: [0, 1],
-                            targetNgram: [0]
+                            r0: [0, 1],
+                            r1: [0]
                         }
                     ]
                 }
@@ -364,10 +358,11 @@ describe("align usfm3", () => {
 \\c 1
 \\p
 \\v 1
-\\zaln-s | x-content="olleh dlrow"
+\\zaln-s | x-verified="false" x-occurrence="1" x-occurrences="1" x-content="olleh"
+\\zaln-s | x-verified="false" x-occurrence="1" x-occurrences="1" x-content="dlrow"
 \\w hello|x-occurrence="1" x-occurrences="1"\\w*
 \\zaln-e\\*
-
+\\zaln-e\\*
 `;
         expect(alignUSFM(alignments, usfm)).toEqual(expected);
     });
@@ -409,8 +404,8 @@ describe("align usfm3", () => {
                     },
                     alignments: [
                         {
-                            sourceNgram: [0],
-                            targetNgram: [0, 1]
+                            r0: [0],
+                            r1: [0, 1]
                         }
                     ]
                 }
@@ -423,11 +418,10 @@ describe("align usfm3", () => {
 \\c 1
 \\p
 \\v 1
-\\zaln-s | x-content="olleh"
+\\zaln-s | x-verified="false" x-occurrence="1" x-occurrences="1" x-content="olleh"
 \\w hello|x-occurrence="1" x-occurrences="1"\\w*
 \\w world|x-occurrence="1" x-occurrences="1"\\w*
 \\zaln-e\\*
-
 `;
         expect(alignUSFM(alignments, usfm)).toEqual(expected);
     });
