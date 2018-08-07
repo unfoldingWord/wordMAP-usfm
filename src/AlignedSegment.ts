@@ -1,28 +1,13 @@
-import Lexer, {Token} from 'wordmap-lexer';
+import Lexer, {Token} from "wordmap-lexer";
 
-// /**
-//  * Represents a token within a sentence
-//  */
-// export class Token {
-//     readonly text: string;
-//     readonly occurrence: number;
-//     readonly occurrences: number;
-//
-//     constructor(text: string, occurrence: number, occurrences: number) {
-//         this.text = text;
-//         this.occurrence = occurrence;
-//         this.occurrences = occurrences;
-//     }
-//
-//     /**
-//      * Checks if this token equals another one.
-//      * @param {Token} token
-//      * @return {boolean}
-//      */
-//     equals(token: Token): boolean {
-//         return token.text === this.text && token.occurrence === this.occurrence && token.occurrences === this.occurrences;
-//     }
-// }
+/**
+ * A comparator for sorting numbers
+ * @param a
+ * @param b
+ */
+function numberComparator(a: number, b: number): number {
+    return a - b;
+}
 
 /**
  * Represents a sentence
@@ -54,7 +39,7 @@ export class Sentence {
      */
     static fromJson(json: any): Sentence {
         const sentence = new Sentence();
-        if(json.tokens && json.tokens.length && typeof json.tokens[0] === 'string') {
+        if (json.tokens && json.tokens.length && typeof json.tokens[0] === "string") {
             sentence._tokens = Lexer.tokenizeWords(json.tokens);
         } else {
             for (const t of json.tokens) {
@@ -86,6 +71,18 @@ export class Alignment {
         this.sourceNgram = sourceNgram;
         this.targetNgram = targetNgram;
         this.verified = verified;
+    }
+
+    /**
+     * Compares two alignments for sorting
+     * @param a
+     * @param b
+     */
+    static comparator(a: Alignment, b: Alignment): number {
+        if (a.sourceNgram.length && b.sourceNgram.length) {
+            return a.sourceNgram[0] - b.sourceNgram[0];
+        }
+        return 0;
     }
 }
 
@@ -125,7 +122,7 @@ class AlignedSegment {
         segment._source = Sentence.fromJson(sourceJson);
         segment._target = Sentence.fromJson(targetJson);
         for (const a of json.alignments) {
-            segment._alignments.push(new Alignment(a.r0, a.r1, Boolean(a.verified)));
+            segment._alignments.push(new Alignment(a.r0.sort(numberComparator), a.r1.sort(numberComparator), Boolean(a.verified)));
         }
         return segment;
     }

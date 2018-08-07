@@ -1,7 +1,7 @@
 // @ts-ignore
 import * as usfmjs from "usfm-js";
 import Reference from "./Reference";
-import AlignedSegment from "./AlignedSegment";
+import AlignedSegment, {Alignment} from "./AlignedSegment";
 
 /**
  * Injects alignment data into usfm
@@ -115,6 +115,22 @@ function cleanSortingKey(verseObjects: any) {
 }
 
 /**
+ * Filters and sorts alignments
+ * @param alignments
+ */
+function sanitizeAlignments(alignments: Alignment[]): Alignment[] {
+    const cleaned = [];
+    for (const a of alignments) {
+        // skip empty alignments
+        if (a.targetNgram.length === 0 || a.sourceNgram.length === 0) {
+            continue;
+        }
+        cleaned.push(a);
+    }
+    return cleaned.sort(Alignment.comparator);
+}
+
+/**
  * Injects alignments into a verse
  * @param usfm
  * @param segment
@@ -123,8 +139,15 @@ export function alignSegment(usfm: any, segment: AlignedSegment) {
 
     const usfmObjects = [];
     let lastTargetTokenPos: number = -1;
+    const alignments = sanitizeAlignments(segment.alignments);
 
-    for (const alignment of segment.alignments) {
+    // build usfm
+    for (const alignment of alignments) {
+
+        // skip empty alignments
+        if(alignment.targetNgram.length === 0 || alignment.sourceNgram.length === 0) {
+            continue;
+        }
 
         // add un-aligned target tokens
         if (lastTargetTokenPos >= 0) {

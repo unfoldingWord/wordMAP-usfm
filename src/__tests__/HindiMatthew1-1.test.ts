@@ -52,51 +52,51 @@ describe("align usfm2", () => {
                     },
                     "alignments": [
                         {
+                            "r0": [],
                             "r1": [8, 1, 4],
                             "score": 0,
-                            "r0": [],
                             "verified": false
                         },
                         {
+                            "r0": [3],
                             "r1": [7],
                             "score": 0,
-                            "r0": [3],
                             "verified": false
                         },
                         {
+                            "r0": [5],
                             "r1": [3],
                             "score": 0,
-                            "r0": [5],
                             "verified": false
                         },
                         {
+                            "r0": [1, 0],
                             "r1": [9],
                             "score": 0,
-                            "r0": [1, 0],
                             "verified": false
                         },
                         {
+                            "r0": [2],
                             "r1": [6],
                             "score": 0,
-                            "r0": [2],
                             "verified": false
                         },
                         {
+                            "r0": [7],
                             "r1": [0],
                             "score": 0,
-                            "r0": [7],
                             "verified": false
                         },
                         {
+                            "r0": [4],
                             "r1": [2],
                             "score": 0,
-                            "r0": [4],
                             "verified": false
                         },
                         {
+                            "r0": [6],
                             "r1": [5],
                             "score": 0,
-                            "r0": [6],
                             "verified": false
                         }
                     ]
@@ -115,36 +115,32 @@ describe("align usfm2", () => {
 \\c 1
 \\p
 \\v 1
-\\zaln-s | x-verified="false" x-occurrence="1" x-occurrences="1" x-content="βίβλος"
-\\w The|x-occurrence="1" x-occurrences="1"\\w*
-\\w book|x-occurrence="1" x-occurrences="1"\\w*
+\\zaln-s | x-verified="false" x-occurrence="1" x-occurrences="1" x-content="Ἀβραάμ"
+\\w अब्राहम|x-occurrence="1" x-occurrences="1"\\w*
 \\zaln-e\\*
-\\w of|x-occurrence="1" x-occurrences="4"\\w*
-\\zaln-s | x-verified="false" x-occurrence="1" x-occurrences="1" x-content="γενέσεως"
-\\w the|x-occurrence="1" x-occurrences="1"\\w*
-\\w genealogy|x-occurrence="1" x-occurrences="1"\\w*
-\\zaln-e\\*
-\\w of|x-occurrence="2" x-occurrences="4"\\w*
-\\zaln-s | x-verified="false" x-occurrence="1" x-occurrences="1" x-content="Ἰησοῦ"
-\\w Jesus|x-occurrence="1" x-occurrences="1"\\w*
-\\zaln-e\\*
-\\zaln-s | x-verified="false" x-occurrence="1" x-occurrences="1" x-content="Χριστοῦ"
-\\w Christ|x-occurrence="1" x-occurrences="1"\\w*
-\\zaln-e\\*,
+\\w की|x-occurrence="1" x-occurrences="3"\\w*
 \\zaln-s | x-verified="false" x-occurrence="1" x-occurrences="2" x-content="υἱοῦ"
-\\w son|x-occurrence="1" x-occurrences="2"\\w*
-\\w of|x-occurrence="3" x-occurrences="4"\\w*
+\\w सन्तान|x-occurrence="1" x-occurrences="2"\\w*
 \\zaln-e\\*
 \\zaln-s | x-verified="false" x-occurrence="1" x-occurrences="1" x-content="Δαυεὶδ"
-\\w David|x-occurrence="1" x-occurrences="1"\\w*
-\\zaln-e\\*,
-\\zaln-s | x-verified="false" x-occurrence="2" x-occurrences="2" x-content="υἱοῦ"
-\\w son|x-occurrence="2" x-occurrences="2"\\w*
-\\w of|x-occurrence="4" x-occurrences="4"\\w*
+\\w दाऊद|x-occurrence="1" x-occurrences="1"\\w*
 \\zaln-e\\*
-\\zaln-s | x-verified="false" x-occurrence="1" x-occurrences="1" x-content="Ἀβραάμ"
-\\w Abraham|x-occurrence="1" x-occurrences="1"\\w*
-\\zaln-e\\*.
+\\w की|x-occurrence="2" x-occurrences="3"\\w*
+\\zaln-s | x-verified="false" x-occurrence="2" x-occurrences="2" x-content="υἱοῦ"
+\\w सन्तान|x-occurrence="2" x-occurrences="2"\\w*
+\\zaln-e\\*
+\\zaln-s | x-verified="false" x-occurrence="1" x-occurrences="1" x-content="Ἰησοῦ"
+\\w यीशु|x-occurrence="1" x-occurrences="1"\\w*
+\\zaln-e\\*
+\\zaln-s | x-verified="false" x-occurrence="1" x-occurrences="1" x-content="Χριστοῦ"
+\\w मसीह|x-occurrence="1" x-occurrences="1"\\w*
+\\zaln-e\\*
+\\w की|x-occurrence="3" x-occurrences="3"\\w*
+\\zaln-s | x-verified="false" x-occurrence="1" x-occurrences="1" x-content="βίβλος"
+\\zaln-s | x-verified="false" x-occurrence="1" x-occurrences="1" x-content="γενέσεως"
+\\w वंशावली|x-occurrence="1" x-occurrences="1"\\w*
+\\zaln-e\\*
+\\zaln-e\\*
 `;
         expect(alignUSFM(alignments, usfm)).toEqual(expected);
     });
