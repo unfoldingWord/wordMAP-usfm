@@ -67,7 +67,7 @@ export class Sentence {
         if (index >= 0 && index < this._tokens.length) {
             return this._tokens[index];
         } else {
-            throw new Error(`Token index "${index}" is out of bounds. Accepted range is [0...${this._tokens.length}]`);
+            throw new Error(`Token index "${index}" is out of bounds. Accepted range is [0...${this._tokens.length - 1}]`);
         }
     }
 }
