@@ -26,6 +26,13 @@ export class Sentence {
         return this._tokens;
     }
 
+    /**
+     * Returns the length of the sentence in tokens
+     */
+    get length(): number {
+        return this._tokens.length;
+    }
+
     private _context: string = "";
 
     get context() {
@@ -50,6 +57,18 @@ export class Sentence {
         sentence._text = json.text;
         sentence._context = json.metadata.contextId;
         return sentence;
+    }
+
+    /**
+     * Safely retrieves a token from the sentence
+     * @param index
+     */
+    public getTokenSafely(index: number): Token {
+        if (index >= 0 && index < this._tokens.length) {
+            return this._tokens[index];
+        } else {
+            throw new Error(`Token index "${index}" is out of bounds. Accepted range is [0...${this._tokens.length}]`);
+        }
     }
 }
 

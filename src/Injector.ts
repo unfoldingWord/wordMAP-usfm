@@ -2,6 +2,7 @@
 import * as usfmjs from "usfm-js";
 import Reference from "./Reference";
 import AlignedSegment, {Alignment} from "./AlignedSegment";
+import {Token} from 'wordmap-lexer';
 
 /**
  * Injects alignment data into usfm
@@ -23,7 +24,12 @@ export function alignUSFM(alignments: any, usfm: string): string {
             // look up verse
             if (Object.keys(usfmObject.chapters).indexOf(cId) >= 0 && Object.keys(usfmObject.chapters[cId]).indexOf(vId) >= 0) {
                 // apply alignments
-                usfmObject.chapters[cId][vId] = alignSegment(usfmObject.chapters[cId][vId], segment);
+                try {
+                    usfmObject.chapters[cId][vId] = alignSegment(segment);
+                } catch (e) {
+                    console.error(`Error caught at ${cId}:${vId}`);
+                    throw e;
+                }
             } else {
                 console.warn(`${reference} not found in usfm`);
             }
@@ -31,87 +37,6 @@ export function alignUSFM(alignments: any, usfm: string): string {
     }
 
     return usfmjs.toUSFM(usfmObject);
-}
-
-/**
- * Looks up an alignment index
- * @param verseObj - the verse object used for the search
- * @param segment
- * @return {number}
- */
-function findAlignment(verseObj: any, segment: AlignedSegment): number {
-    for (const alignmentIndex of Object.keys(segment.alignments)) {
-        const alignment = segment.alignments[parseInt(alignmentIndex)];
-        for (const tokenId of alignment.targetNgram) {
-            const token = segment.target.tokens[tokenId];
-            if (verseObj.text === token.toString()
-                && verseObj.occurrence == token.occurrence
-                && verseObj.occurrences == token.occurrences) {
-                return Number.parseInt(alignmentIndex);
-            }
-        }
-    }
-    return -1;
-}
-
-/**
- * Returns the title of the alignment source tokens
- * @param verse
- * @param {number} alignmentIndex
- * @return {string}
- */
-function getAlignmentTitle(verse: any, alignmentIndex: number): string {
-    return verse.alignments[alignmentIndex].sourceNgram.map((i: number) => {
-        return verse.source.tokens[i].text;
-    }).join(" ");
-}
-
-/**
- * Compares two numbers for sorting
- * @param {number} a
- * @param {number} b
- * @return {number}
- */
-function numberComparator(a: number, b: number) {
-    return a - b;
-}
-
-/**
- * Compares two verse objects for sorting
- * @param a
- * @param b
- * @return {number}
- */
-function verseObjectComparator(a: any, b: any) {
-    const aSort = getVerseObjectSortKey(a);
-    const bSort = getVerseObjectSortKey(b);
-    return numberComparator(aSort, bSort);
-}
-
-/**
- * Returns the key used for sorting the verse object
- * @param obj
- * @return {number}
- */
-function getVerseObjectSortKey(obj: any): number {
-    if (obj.children && obj.children.length) {
-        return getVerseObjectSortKey(obj.children[0]);
-    } else {
-        return obj.position;
-    }
-}
-
-/**
- * Removes the sorting key from the verse objects
- * @param verseObjects
- */
-function cleanSortingKey(verseObjects: any) {
-    for (const obj of verseObjects) {
-        delete obj.position;
-        if (obj.children) {
-            cleanSortingKey(obj.children);
-        }
-    }
 }
 
 /**
@@ -131,11 +56,10 @@ function sanitizeAlignments(alignments: Alignment[]): Alignment[] {
 }
 
 /**
- * Injects alignments into a verse
- * @param usfm
+ * Converts an aligned segment to usfm
  * @param segment
  */
-export function alignSegment(usfm: any, segment: AlignedSegment) {
+export function alignSegment(segment: AlignedSegment) {
 
     const usfmObjects = [];
     let lastTargetTokenPos: number = -1;
@@ -145,7 +69,7 @@ export function alignSegment(usfm: any, segment: AlignedSegment) {
     for (const alignment of alignments) {
 
         // skip empty alignments
-        if(alignment.targetNgram.length === 0 || alignment.sourceNgram.length === 0) {
+        if (alignment.targetNgram.length === 0 || alignment.sourceNgram.length === 0) {
             continue;
         }
 
@@ -153,30 +77,23 @@ export function alignSegment(usfm: any, segment: AlignedSegment) {
         if (lastTargetTokenPos >= 0) {
             while (lastTargetTokenPos < alignment.targetNgram[0] - 1) {
                 lastTargetTokenPos++;
-                const token = segment.target.tokens[lastTargetTokenPos];
-                usfmObjects.push({
-                    occurrence: token.occurrence,
-                    occurrences: token.occurrences,
-                    text: token.toString(),
-                    type: "word"
-                });
+                const token = segment.target.getTokenSafely(lastTargetTokenPos);
+                usfmObjects.push(makeWord(token));
             }
         }
 
         // collect aligned target tokens
         const children = [];
         for (const targetPos of alignment.targetNgram) {
-            const token = segment.target.tokens[targetPos];
-            children.push({
-                occurrence: token.occurrence,
-                occurrences: token.occurrences,
-                text: token.toString(),
-                type: "word"
-            });
+            const token = segment.target.getTokenSafely(targetPos);
+            children.push(makeWord(token));
         }
 
         // build milestone(s)
-        const sourceTokens = alignment.sourceNgram.map(i => segment.source.tokens[i]);
+        const sourceTokens = alignment.sourceNgram.map(i => {
+            return segment.source.getTokenSafely(i);
+        });
+
         const usfmObj = makeMilestone(sourceTokens, children, Boolean(alignment.verified));
         usfmObjects.push(usfmObj);
 
@@ -185,18 +102,22 @@ export function alignSegment(usfm: any, segment: AlignedSegment) {
 
     // add remaining un-aligned target tokens
     if (lastTargetTokenPos >= 0) {
-        while (lastTargetTokenPos < segment.target.tokens.length - 1) {
+        while (lastTargetTokenPos < segment.target.length - 1) {
             lastTargetTokenPos++;
-            const token = segment.target.tokens[lastTargetTokenPos];
-            usfmObjects.push({
-                occurrence: token.occurrence,
-                occurrences: token.occurrences,
-                text: token.toString(),
-                type: "word"
-            });
+            const token = segment.target.getTokenSafely(lastTargetTokenPos);
+            usfmObjects.push(makeWord(token));
         }
     }
     return usfmObjects;
+}
+
+function makeWord(token: Token): any {
+    return {
+        occurrence: token.occurrence,
+        occurrences: token.occurrences,
+        text: token.toString(),
+        type: "word"
+    };
 }
 
 /**
@@ -206,7 +127,7 @@ export function alignSegment(usfm: any, segment: AlignedSegment) {
  * @param verified - indicates if the alignment has been verified
  */
 function makeMilestone(sourceTokens: any[], children: any[], verified: boolean): any {
-    if (sourceTokens.length) {
+    if (sourceTokens && sourceTokens.length > 0) {
         const token = sourceTokens[0];
         return {
             verified,
