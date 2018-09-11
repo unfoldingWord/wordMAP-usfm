@@ -1,6 +1,6 @@
 {
   "name": "wordmap-usfm",
-  "version": "0.3.4",
+  "version": "0.4.0",
   "description": "A utility for injecting alignment data into USFM files",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -11,10 +11,10 @@
     "prebuild": "rm -rf dist",
     "build": "tsc",
     "prepare": "if [ ! -d './dist/' ]; then npm run build; fi",
-    "dist": "npm test && npm run build && npm publish"
+    "prepublishOnly": "npm test && npm run build"
   },
   "bin": {
-    "word-map-usfm": "bin/magicli.js"
+    "wordmap-usfm": "bin/magicli.js"
   },
   "jest": {
     "moduleFileExtensions": [
@@ -30,17 +30,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/translationCoreApps/word-map-usfm.git"
+    "url": "git+https://github.com/translationCoreApps/wordMAP-usfm.git"
   },
   "author": "unfoldingWord",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/translationCoreApps/word-map-usfm/issues"
+    "url": "https://github.com/translationCoreApps/wordMAP-usfm/issues"
   },
-  "homepage": "https://github.com/translationCoreApps/word-map-usfm#readme",
+  "homepage": "https://github.com/translationCoreApps/wordMAP-usfm#readme",
   "devDependencies": {
     "@types/jest": "^22.2.3",
-    "codecov": "^3.0.4",
     "jest": "^22.4.3",
     "ts-jest": "^22.4.4",
     "tslint": "^5.9.1",
@@ -52,8 +51,10 @@
     "@types/yargs": "^11.0.0",
     "fs-extra": "^6.0.1",
     "magicli": "^0.1.2",
-    "usfm-js": "^1.0.0-beta.30",
-    "wordmap-lexer": "^0.3.1",
+    "usfm-js": "^1.0.3",
     "yargs": "^11.0.0"
+  },
+  "peerDependencies": {
+    "wordmap-lexer": "^0.3.2"
   }
 }

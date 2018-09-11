@@ -1,21 +1,25 @@
-# word-map-usfm
-This library provides utilities for injecting alignment data from [wordMAP](https://github.com/translationCoreApps/word-map) into USFM3.
+[![Build Status](https://travis-ci.org/translationCoreApps/wordMAP-usfm.svg?branch=master)](https://travis-ci.org/translationCoreApps/wordMAP-usfm)
+[![codecov](https://codecov.io/gh/translationCoreApps/wordmap-usfm/branch/master/graph/badge.svg)](https://codecov.io/gh/translationCoreApps/wordmap-usfm)
+[![TypeScript](https://badges.frapsoft.com/typescript/code/typescript.svg?v=101)](https://github.com/ellerbrock/typescript-badges/)
+
+# wordMAP-usfm
+This library provides utilities for injecting alignment data from [WordMAP](https://github.com/translationCoreApps/wordmap) into USFM3 files.
 
 ## Usage
 
 ### From the command line:
 ```
-npm i word-map-usfm -g
-word-map-usfm --help
+npm i wordmap-usfm -g
+wordmap-usfm --help
 ```
 
 ### As a module:
 ```
-npm i word-map-usfm
+npm i wordmap-usfm
 ```
 
 ```js
-import {align} from 'word-map-usfm';
+import {align} from 'wordmap-usfm';
 ...
 const alignedUSFM = align(alignmentData, usfmData);
 ```
