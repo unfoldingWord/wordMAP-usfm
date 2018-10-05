@@ -308,6 +308,91 @@ describe("align usfm3", () => {
         expect(alignUSFM(alignments, usfm)).toEqual(expected);
     });
 
+    it("skips un-verified alignments", () => {
+        const usfm = `\\id TIT EN_ULB en_English_ltr Thu Jul 05 2018 15:43:08 GMT-0700 (PDT) tc
+\\h Titus
+
+\\s5
+\\c 1
+\\p
+\\v 1
+\\w Speak|x-occurrence="1" x-occurrences="1"\\w*
+\\v 2
+\\w of|x-occurrence="1" x-occurrences="1"\\w*
+`;
+        const alignments = {
+            metadata: {
+                resources: {
+                    r1: {
+                        languageCode: "en"
+                    }
+                }
+            },
+            segments: [
+                {
+                    resources: {
+                        r1: {
+                            tokens: tokenize("Speak"),
+                            metadata: {
+                                contextId: "MAT001001"
+                            }
+                        },
+                        r0: {
+                            tokens: tokenize("kaepS"),
+                            metadata: {
+                                contextId: "MAT001001"
+                            }
+                        }
+                    },
+                    alignments: [
+                        {
+                            r0: [0],
+                            r1: [0],
+                            verified: false
+                        }
+                    ]
+                },
+                {
+                    resources: {
+                        r1: {
+                            tokens: tokenize("of"),
+                            metadata: {
+                                contextId: "MAT001002"
+                            }
+                        },
+                        r0: {
+                            tokens: tokenize("fo"),
+                            metadata: {
+                                contextId: "MAT001002"
+                            }
+                        }
+                    },
+                    alignments: [
+                        {
+                            r0: [0],
+                            r1: [0],
+                            verified: true
+                        }
+                    ]
+                }
+            ]
+        };
+        const expected = `\\id TIT EN_ULB en_English_ltr Thu Jul 05 2018 15:43:08 GMT-0700 (PDT) tc
+\\h Titus
+
+\\s5
+\\c 1
+\\p
+\\v 1
+\\w Speak|x-occurrence="1" x-occurrences="1"\\w* 
+\\v 2
+\\zaln-s | x-verified="true" x-occurrence="1" x-occurrences="1" x-content="fo"
+\\w of|x-occurrence="1" x-occurrences="1"\\w*
+\\zaln-e\\*
+`;
+        expect(alignUSFM(alignments, usfm, false)).toEqual(expected);
+    });
+
     it("aligns multiple source tokens", () => {
         const usfm = `\\id TIT EN_ULB en_English_ltr Thu Jul 05 2018 15:43:08 GMT-0700 (PDT) tc
 \\h Titus

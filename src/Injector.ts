@@ -2,15 +2,16 @@
 import * as usfmjs from "usfm-js";
 import Reference from "./Reference";
 import AlignedSegment, {Alignment} from "./AlignedSegment";
-import {Token} from 'wordmap-lexer';
+import {Token} from "wordmap-lexer";
 
 /**
  * Injects alignment data into usfm
  * @param alignments
  * @param {string} usfm
+ * @param {boolean} alignUnverified - include machine alignments.
  * @return {string} usfm3
  */
-export function alignUSFM(alignments: any, usfm: string): string {
+export function alignUSFM(alignments: any, usfm: string, alignUnverified: boolean = true): string {
     const usfmObject = usfmjs.toJSON(usfm);
 
     if (alignments) {
@@ -25,7 +26,7 @@ export function alignUSFM(alignments: any, usfm: string): string {
             if (Object.keys(usfmObject.chapters).indexOf(cId) >= 0 && Object.keys(usfmObject.chapters[cId]).indexOf(vId) >= 0) {
                 // apply alignments
                 try {
-                    usfmObject.chapters[cId][vId] = alignSegment(segment);
+                    usfmObject.chapters[cId][vId] = alignSegment(segment, alignUnverified);
                 } catch (e) {
                     console.error(`Error caught at ${cId}:${vId}`);
                     throw e;
@@ -57,9 +58,10 @@ function sanitizeAlignments(alignments: Alignment[]): Alignment[] {
 
 /**
  * Converts an aligned segment to usfm
- * @param segment
+ * @param segment - the segment to align
+ * @param alignUnverified - include machine alignments.
  */
-export function alignSegment(segment: AlignedSegment) {
+export function alignSegment(segment: AlignedSegment, alignUnverified: boolean = true) {
 
     const usfmObjects = [];
     let lastTargetTokenPos: number = -1;
@@ -94,7 +96,7 @@ export function alignSegment(segment: AlignedSegment) {
             return segment.source.getTokenSafely(i);
         });
 
-        const usfmObj = makeMilestone(sourceTokens, children, Boolean(alignment.verified));
+        const usfmObj = makeMilestone(sourceTokens, children, Boolean(alignment.verified), alignUnverified);
         usfmObjects.push(usfmObj);
 
         lastTargetTokenPos = alignment.targetNgram[alignment.targetNgram.length - 1];
@@ -125,9 +127,12 @@ function makeWord(token: Token): any {
  * @param sourceTokens - the source tokens
  * @param children - the children of the milestone
  * @param verified - indicates if the alignment has been verified
+ * @param alignUnverified - includes machine alignments
  */
-function makeMilestone(sourceTokens: any[], children: any[], verified: boolean): any {
-    if (sourceTokens && sourceTokens.length > 0) {
+function makeMilestone(sourceTokens: any[], children: any[], verified: boolean, alignUnverified: boolean = true): any {
+    const keepMilestone = alignUnverified || verified;
+
+    if (keepMilestone && sourceTokens && sourceTokens.length > 0) {
         const token = sourceTokens[0];
         return {
             verified,

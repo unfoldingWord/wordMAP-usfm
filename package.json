@@ -1,6 +1,6 @@
 {
   "name": "wordmap-usfm",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "description": "A utility for injecting alignment data into USFM files",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

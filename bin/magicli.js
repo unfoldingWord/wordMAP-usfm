@@ -26,6 +26,13 @@ require('magicli')({
           description: 'Path to the output USFM3 file',
           type: 'String',
           required: true
+        },
+        {
+          name: 'alignUnverified',
+          alias: 'm',
+          description: 'Includes machine alignments (Default is "true")',
+          type: 'Boolean',
+          required: false,
         }]
     },
     align: {
