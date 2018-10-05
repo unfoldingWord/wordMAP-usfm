@@ -32,7 +32,7 @@ require('magicli')({
           alias: 'm',
           description: 'Includes machine alignments (Default is "true")',
           type: 'Boolean',
-          required: false,
+          required: false
         }]
     },
     align: {
@@ -51,6 +51,13 @@ require('magicli')({
           description: 'The USFM3 data as a string',
           type: 'String',
           required: true
+        },
+        {
+          name: 'alignUnverified',
+          alias: 'm',
+          description: 'Includes machine alignments (Default is "true")',
+          type: 'Boolean',
+          required: false
         }
       ]
     }
