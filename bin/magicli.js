@@ -30,7 +30,7 @@ require('magicli')({
         {
           name: 'alignUnverified',
           alias: 'm',
-          description: 'Includes machine alignments (Default is "true")',
+          description: 'Includes machine alignments (Default is "false")',
           type: 'Boolean',
           required: false
         }]
@@ -55,7 +55,7 @@ require('magicli')({
         {
           name: 'alignUnverified',
           alias: 'm',
-          description: 'Includes machine alignments (Default is "true")',
+          description: 'Includes machine alignments (Default is "false")',
           type: 'Boolean',
           required: false
         }

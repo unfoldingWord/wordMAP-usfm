@@ -8,7 +8,10 @@ import * as fs from 'fs-extra';
  * @param {string} outputFile - path to the output usfm file
  * @param {boolean} alignUnverified - includes machine alignments
  */
-module.exports.alignFiles = (alignmentsFile: string, usfmFile: string, outputFile: string, alignUnverified: boolean = true) => {
+module.exports.alignFiles = (alignmentsFile: string, usfmFile: string, outputFile: string, alignUnverified: boolean = false) => {
+    if(alignUnverified) {
+        console.log('aligning unverified stuff');
+    }
     const alignments = fs.readFileSync(alignmentsFile).toString();
     const usfm = fs.readFileSync(usfmFile).toString();
     const alignmentsJson = JSON.parse(alignments);
@@ -23,6 +26,6 @@ module.exports.alignFiles = (alignmentsFile: string, usfmFile: string, outputFil
  * @param {boolean} alignUnverified - includes machine alignments
  * @return {string}
  */
-module.exports.align = (alignments: string, usfm: string, alignUnverified: boolean = true) => {
+module.exports.align = (alignments: string, usfm: string, alignUnverified: boolean = false) => {
     return alignUSFM(JSON.parse(alignments), usfm, alignUnverified);
 };
