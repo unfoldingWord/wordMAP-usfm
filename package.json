@@ -1,6 +1,6 @@
 {
   "name": "wordmap-usfm",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "A utility for injecting alignment data into USFM files",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -50,7 +50,7 @@
     "@types/fs-extra": "^5.0.4",
     "fs-extra": "^6.0.1",
     "magicli": "^0.1.2",
-    "usfm-js": "^1.0.3",
-    "wordmap-lexer": "^0.3.2"
+    "usfm-js": "^1.0.4",
+    "wordmap-lexer": "^0.3.3"
   }
 }
