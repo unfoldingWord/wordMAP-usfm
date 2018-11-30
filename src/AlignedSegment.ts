@@ -30,17 +30,25 @@ class AlignedSegment {
         segment.targetSentence = Sentence.fromJson(targetJson);
         const alignedTargetTokens: number[] = [];
         const tokenAlignments: number[] = [];
+        const alignments: Alignment[] = [];
         for (let i = 0, len = json.alignments.length; i < len; i++) {
             const a = json.alignments[i];
             const alignment = new Alignment(a.r0.sort(numberComparator), a.r1.sort(numberComparator), Boolean(a.verified));
-            segment.segmentAlignments.push(alignment);
+
+            // filter out empty alignments
+            if (alignment.targetNgram.length === 0 || alignment.sourceNgram.length === 0) {
+                continue;
+            }
+
+            alignments.push(alignment);
 
             // keep track of aligned tokens for quick reference
             alignedTargetTokens.push.apply(alignedTargetTokens, alignment.targetNgram);
             for (const t of alignment.targetNgram) {
-                tokenAlignments[t] = i;
+                tokenAlignments[t] = alignments.length - 1;
             }
         }
+        segment.segmentAlignments = alignments.sort(Alignment.comparator);
         segment.alignedTargetTokens = alignedTargetTokens;
         segment.tokenAlignments = tokenAlignments;
         return segment;

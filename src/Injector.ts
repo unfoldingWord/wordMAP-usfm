@@ -67,15 +67,13 @@ export function alignSegment(segment: AlignedSegment, alignUnverified: boolean =
     const usfmObjects = [];
     let currentAlignmentIndex = -1;
     let milestoneQueue: any[] = [];
-    // let lastTargetTokenPos: number = -1;
-    const alignments = sanitizeAlignments(segment.alignments);
 
     /**
      * Macro thingy to close a milestone
      * @param alignmentIndex - the index of the alignment (milestone) being closed
      */
     const closeMilestone = (alignmentIndex: number) => {
-        const alignment = alignments[alignmentIndex];
+        const alignment = segment.alignments[alignmentIndex];
         // TODO: cache the source tokens
         const sourceTokens = alignment.sourceNgram.map((j: number) => {
             return segment.source.requireToken(j);
