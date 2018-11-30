@@ -142,6 +142,30 @@ it("should not produce duplicate words", () => {
 
 \\c 1
 \\v 17
+\\w क्योंकि|x-occurrence="1" x-occurrences="1"\\w*
+\\w हर|x-occurrence="1" x-occurrences="2"\\w*
+\\w एक|x-occurrence="1" x-occurrences="2"\\w*
+\\w अच्छा|x-occurrence="1" x-occurrences="1"\\w*
+\\w वरदान|x-occurrence="1" x-occurrences="1"\\w*
+\\w और|x-occurrence="1" x-occurrences="3"\\w*
+\\w हर|x-occurrence="2" x-occurrences="2"\\w*
+\\w एक|x-occurrence="2" x-occurrences="2"\\w*
+\\w उत्तम|x-occurrence="1" x-occurrences="1"\\w*
+\\w दान|x-occurrence="1" x-occurrences="1"\\w*
+\\w ऊपर|x-occurrence="1" x-occurrences="1"\\w*
+\\w ही|x-occurrence="1" x-occurrences="1"\\w*
+\\w से|x-occurrence="1" x-occurrences="2"\\w*
+\\w है,|x-occurrence="1" x-occurrences="3"\\w*
+\\w और|x-occurrence="2" x-occurrences="3"\\w*
+\\w ज्योतियों|x-occurrence="1" x-occurrences="1"\\w*
+\\w के|x-occurrence="1" x-occurrences="2"\\w*
+\\w पिता|x-occurrence="1" x-occurrences="1"\\w*
+\\w की|x-occurrence="1" x-occurrences="1"\\w*
+\\w ओर|x-occurrence="1" x-occurrences="1"\\w*
+\\w से|x-occurrence="2" x-occurrences="2"\\w*
+\\w मिलता|x-occurrence="1" x-occurrences="1"\\w*
+\\w है,|x-occurrence="2" x-occurrences="3"\\w*
+\\w जिसमें|x-occurrence="1" x-occurrences="1"\\w*
 \\zaln-s | x-verified="true" x-occurrence="1" x-occurrences="1" x-content="οὐκ"
 \\w न|x-occurrence="1" x-occurrences="2"\\w*
 \\w न|x-occurrence="2" x-occurrences="2"\\w*
