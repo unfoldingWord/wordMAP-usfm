@@ -104,12 +104,10 @@ export function alignSegment(segment: AlignedSegment, alignUnverified: boolean =
     }
 
     // add remaining un-aligned target tokens
-    if (lastTargetTokenPos >= 0) {
-        while (lastTargetTokenPos < segment.target.length - 1) {
-            lastTargetTokenPos++;
-            const token = segment.target.getTokenSafely(lastTargetTokenPos);
-            usfmObjects.push(makeWord(token));
-        }
+    while (lastTargetTokenPos < segment.target.length - 1) {
+        lastTargetTokenPos++;
+        const token = segment.target.getTokenSafely(lastTargetTokenPos);
+        usfmObjects.push(makeWord(token));
     }
     return usfmObjects;
 }

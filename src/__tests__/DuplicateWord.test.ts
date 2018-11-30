@@ -288,7 +288,48 @@ it("should not truncate the verse", () => {
 \\mt1 याकूब
 
 \\c 1
-\\v 17`;
+\\v 17
+\\w क्योंकि|x-occurrence="1" x-occurrences="1"\\w*
+\\w हर|x-occurrence="1" x-occurrences="2"\\w*
+\\w एक|x-occurrence="1" x-occurrences="2"\\w*
+\\w अच्छा|x-occurrence="1" x-occurrences="1"\\w*
+\\w वरदान|x-occurrence="1" x-occurrences="1"\\w*
+\\w और|x-occurrence="1" x-occurrences="3"\\w*
+\\w हर|x-occurrence="2" x-occurrences="2"\\w*
+\\w एक|x-occurrence="2" x-occurrences="2"\\w*
+\\w उत्तम|x-occurrence="1" x-occurrences="1"\\w*
+\\w दान|x-occurrence="1" x-occurrences="1"\\w*
+\\w ऊपर|x-occurrence="1" x-occurrences="1"\\w*
+\\w ही|x-occurrence="1" x-occurrences="1"\\w*
+\\w से|x-occurrence="1" x-occurrences="2"\\w*
+\\w है,|x-occurrence="1" x-occurrences="3"\\w*
+\\w और|x-occurrence="2" x-occurrences="3"\\w*
+\\w ज्योतियों|x-occurrence="1" x-occurrences="1"\\w*
+\\w के|x-occurrence="1" x-occurrences="2"\\w*
+\\w पिता|x-occurrence="1" x-occurrences="1"\\w*
+\\w की|x-occurrence="1" x-occurrences="1"\\w*
+\\w ओर|x-occurrence="1" x-occurrences="1"\\w*
+\\w से|x-occurrence="2" x-occurrences="2"\\w*
+\\w मिलता|x-occurrence="1" x-occurrences="1"\\w*
+\\w है,|x-occurrence="2" x-occurrences="3"\\w*
+\\w जिसमें|x-occurrence="1" x-occurrences="1"\\w*
+\\w न|x-occurrence="1" x-occurrences="2"\\w*
+\\w तो|x-occurrence="1" x-occurrences="1"\\w*
+\\w कोई|x-occurrence="1" x-occurrences="1"\\w*
+\\w परिवर्तन|x-occurrence="1" x-occurrences="1"\\w*
+\\w हो|x-occurrence="1" x-occurrences="1"\\w*
+\\w सकता|x-occurrence="1" x-occurrences="1"\\w*
+\\w है,|x-occurrence="3" x-occurrences="3"\\w*
+\\w और|x-occurrence="3" x-occurrences="3"\\w*
+\\w न|x-occurrence="2" x-occurrences="2"\\w*
+\\w अदल-बदल|x-occurrence="1" x-occurrences="1"\\w*
+\\w के|x-occurrence="2" x-occurrences="2"\\w*
+\\w कारण|x-occurrence="1" x-occurrences="1"\\w*
+\\w उस|x-occurrence="1" x-occurrences="1"\\w*
+\\w पर|x-occurrence="1" x-occurrences="1"\\w*
+\\w छाया|x-occurrence="1" x-occurrences="1"\\w*
+\\w पड़ती|x-occurrence="1" x-occurrences="1"\\w*
+\\w है।|x-occurrence="1" x-occurrences="1"\\w*`;
 
     expect(alignUSFM(alignments, usfm)).toEqual(expectedUSFM);
 });
