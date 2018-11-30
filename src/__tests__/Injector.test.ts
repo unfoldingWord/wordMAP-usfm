@@ -23,20 +23,20 @@ describe("align usfm3", () => {
 \\p
 \\v 1
 \\zaln-s | x-content="Βίβλος"
-\\w book|\\w*
+\\w book\\w*
 \\zaln-e\\*
 \\zaln-s | x-content="γενέσεως"
-\\w genealogy|\\w*
+\\w genealogy\\w*
 \\zaln-e\\*
 \\zaln-s | x-content="Ἰησοῦ"
-\\w Jesus|\\w*
+\\w Jesus\\w*
 \\zaln-e\\*
 \\zaln-s | x-content="Χριστοῦ"
-\\w Christ|\\w*
+\\w Christ\\w*
 \\zaln-e\\*
 \\zaln-s | x-content="υἱοῦ"
-\\w son|\\w*
-\\w of|\\w*
+\\w son\\w*
+\\w of\\w*
 \\zaln-e\\*
 `;
         const alignments = {
