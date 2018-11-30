@@ -92,7 +92,7 @@ export function alignSegment(segment: AlignedSegment, alignUnverified: boolean =
 
             // close milestone
             if (currentAlignmentIndex !== alignmentIndex && milestoneQueue.length > 0) {
-                closeMilestone(alignmentIndex);
+                closeMilestone(currentAlignmentIndex);
             }
 
             // build milestone

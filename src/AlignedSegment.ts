@@ -48,7 +48,7 @@ class AlignedSegment {
                 tokenAlignments[t] = alignments.length - 1;
             }
         }
-        segment.segmentAlignments = alignments.sort(Alignment.comparator);
+        segment.segmentAlignments = alignments;
         segment.alignedTargetTokens = alignedTargetTokens;
         segment.tokenAlignments = tokenAlignments;
         return segment;
