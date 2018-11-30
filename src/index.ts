@@ -1,5 +1,5 @@
-import {alignUSFM} from './Injector';
-import * as fs from 'fs-extra';
+import * as fs from "fs-extra";
+import {alignUSFM} from "./Injector";
 
 /**
  * Reads data from files and writes the aligned USFM to a file.
@@ -9,8 +9,8 @@ import * as fs from 'fs-extra';
  * @param {boolean} alignUnverified - includes machine alignments
  */
 module.exports.alignFiles = (alignmentsFile: string, usfmFile: string, outputFile: string, alignUnverified: boolean = false) => {
-    if(alignUnverified) {
-        console.log('aligning unverified stuff');
+    if (alignUnverified) {
+        console.log("aligning unverified stuff");
     }
     const alignments = fs.readFileSync(alignmentsFile).toString();
     const usfm = fs.readFileSync(usfmFile).toString();
@@ -21,7 +21,7 @@ module.exports.alignFiles = (alignmentsFile: string, usfmFile: string, outputFil
 
 /**
  * Aligns USFM and returns the result
- * @param {string} alignments
+ * @param {string} alignments - the raw alignment data
  * @param {string} usfm
  * @param {boolean} alignUnverified - includes machine alignments
  * @return {string}

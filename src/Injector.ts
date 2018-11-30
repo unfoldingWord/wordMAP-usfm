@@ -1,15 +1,16 @@
 // @ts-ignore
 import * as usfmjs from "usfm-js";
-import Reference from "./Reference";
-import AlignedSegment, {Alignment} from "./AlignedSegment";
 import {Token} from "wordmap-lexer";
+import AlignedSegment from "./AlignedSegment";
+import Alignment from "./Alignment";
+import Reference from "./Reference";
 
 /**
  * Injects alignment data into usfm
- * @param alignments
- * @param {string} usfm
+ * @param alignments - the alignment data to be merged into the usfm
+ * @param {string} usfm - the usfm that needs alignment
  * @param {boolean} alignUnverified - include machine alignments.
- * @return {string} usfm3
+ * @return {string} the aligned usfm
  */
 export function alignUSFM(alignments: any, usfm: string, alignUnverified: boolean = true): string {
     const usfmObject = usfmjs.toJSON(usfm);
@@ -92,7 +93,7 @@ export function alignSegment(segment: AlignedSegment, alignUnverified: boolean =
         }
 
         // build milestone(s)
-        const sourceTokens = alignment.sourceNgram.map(i => {
+        const sourceTokens = alignment.sourceNgram.map((i: number) => {
             return segment.source.getTokenSafely(i);
         });
 
