@@ -11,7 +11,7 @@ function numberComparator(a: number, b: number): number {
 }
 
 /**
- * Represents an aligned sentence
+ * Represents an aligned sentence/verse
  */
 class AlignedSegment {
 
@@ -28,28 +28,80 @@ class AlignedSegment {
         const targetJson = json.resources.r1;
         segment.sourceSentence = Sentence.fromJson(sourceJson);
         segment.targetSentence = Sentence.fromJson(targetJson);
-        for (const a of json.alignments) {
-            segment.segmentAlignments.push(new Alignment(a.r0.sort(numberComparator), a.r1.sort(numberComparator), Boolean(a.verified)));
+        const alignedTargetTokens: number[] = [];
+        const tokenAlignments: number[] = [];
+        for (let i = 0, len = json.alignments.length; i < len; i++) {
+            const a = json.alignments[i];
+            const alignment = new Alignment(a.r0.sort(numberComparator), a.r1.sort(numberComparator), Boolean(a.verified));
+            segment.segmentAlignments.push(alignment);
+
+            // keep track of aligned tokens for quick reference
+            alignedTargetTokens.push.apply(alignedTargetTokens, alignment.targetNgram);
+            for (const t of alignment.targetNgram) {
+                tokenAlignments[t] = i;
+            }
         }
+        segment.alignedTargetTokens = alignedTargetTokens;
+        segment.tokenAlignments = tokenAlignments;
         return segment;
     }
 
     private sourceSentence: Sentence = new Sentence();
 
+    /**
+     * Returns the source sentence
+     */
     get source() {
         return this.sourceSentence;
     }
 
     private targetSentence: Sentence = new Sentence();
 
+    /**
+     * Returns the target sentence
+     */
     get target() {
         return this.targetSentence;
     }
 
+    private alignedTargetTokens: number[] = [];
+    private tokenAlignments: number[] = [];
+
+    /**
+     * Returns an array of target tokens that have been aligned with the source text
+     */
+    get alignedTokens() {
+        return this.alignedTargetTokens;
+    }
+
     private segmentAlignments: Alignment[] = [];
 
+    /**
+     * Returns an array of alignments
+     */
     get alignments(): Alignment[] {
         return this.segmentAlignments;
+    }
+
+    /**
+     * Checks if a target token has been aligned
+     * @param targetToken - the target token position
+     */
+    public isTokenAligned(targetToken: number): boolean {
+        return this.alignedTargetTokens.indexOf(targetToken) >= 0;
+    }
+
+    /**
+     * Returns the token's alignment
+     * @param targetToken - the token position
+     * @return the alignment position
+     */
+    public getTokenAlignmentIndex(targetToken: number): number {
+        if (targetToken >= 0 && targetToken < this.tokenAlignments.length && this.tokenAlignments[targetToken] !== undefined) {
+            return this.tokenAlignments[targetToken];
+        } else {
+            throw new Error("Invalid token index. You should check if the token is aligned first.");
+        }
     }
 
     /**

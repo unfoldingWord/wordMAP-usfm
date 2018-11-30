@@ -58,54 +58,62 @@ function sanitizeAlignments(alignments: Alignment[]): Alignment[] {
 }
 
 /**
- * Converts an aligned segment to usfm
+ * Converts an aligned segment (verse) to usfm
  * @param segment - the segment to align
  * @param alignUnverified - include machine alignments.
  */
 export function alignSegment(segment: AlignedSegment, alignUnverified: boolean = true) {
 
     const usfmObjects = [];
-    let lastTargetTokenPos: number = -1;
+    let currentAlignmentIndex = -1;
+    let milestoneQueue: any[] = [];
+    // let lastTargetTokenPos: number = -1;
     const alignments = sanitizeAlignments(segment.alignments);
 
-    // build usfm
-    for (const alignment of alignments) {
-
-        // skip empty alignments
-        if (alignment.targetNgram.length === 0 || alignment.sourceNgram.length === 0) {
-            continue;
-        }
-
-        // add un-aligned target tokens
-        while (lastTargetTokenPos < alignment.targetNgram[0] - 1) {
-            lastTargetTokenPos++;
-            const token = segment.target.getTokenSafely(lastTargetTokenPos);
-            usfmObjects.push(makeWord(token));
-        }
-
-        // collect aligned target tokens
-        const children = [];
-        for (const targetPos of alignment.targetNgram) {
-            const token = segment.target.getTokenSafely(targetPos);
-            children.push(makeWord(token));
-        }
-
-        // build milestone(s)
-        const sourceTokens = alignment.sourceNgram.map((i: number) => {
-            return segment.source.getTokenSafely(i);
+    /**
+     * Macro thingy to close a milestone
+     * @param alignmentIndex - the index of the alignment (milestone) being closed
+     */
+    const closeMilestone = (alignmentIndex: number) => {
+        const alignment = alignments[alignmentIndex];
+        // TODO: cache the source tokens
+        const sourceTokens = alignment.sourceNgram.map((j: number) => {
+            return segment.source.requireToken(j);
         });
-
-        const usfmObj = makeMilestone(sourceTokens, children, Boolean(alignment.verified), alignUnverified);
+        const usfmObj = makeMilestone(sourceTokens, milestoneQueue, Boolean(alignment.verified), alignUnverified);
         usfmObjects.push(usfmObj);
 
-        lastTargetTokenPos = alignment.targetNgram[alignment.targetNgram.length - 1];
+        milestoneQueue = [];
+    };
+
+    // walk segment
+    for (let i = 0, len = segment.target.length; i < len; i++) {
+        const token = segment.target.requireToken(i);
+        if (segment.isTokenAligned(i)) {
+            const alignmentIndex = segment.getTokenAlignmentIndex(i);
+
+            // close milestone
+            if (currentAlignmentIndex !== alignmentIndex && milestoneQueue.length > 0) {
+                closeMilestone(alignmentIndex);
+            }
+
+            // build milestone
+            currentAlignmentIndex = alignmentIndex;
+            milestoneQueue.push(makeWord(token));
+        } else {
+            if (milestoneQueue.length > 0) {
+                closeMilestone(currentAlignmentIndex);
+                currentAlignmentIndex = -1; // TRICKY: full reset
+            }
+
+            // add un-aligned token
+            usfmObjects.push(makeWord(token));
+        }
     }
 
-    // add remaining un-aligned target tokens
-    while (lastTargetTokenPos < segment.target.length - 1) {
-        lastTargetTokenPos++;
-        const token = segment.target.getTokenSafely(lastTargetTokenPos);
-        usfmObjects.push(makeWord(token));
+    // close milestone
+    if (currentAlignmentIndex >= 0 && milestoneQueue.length > 0) {
+        closeMilestone(currentAlignmentIndex);
     }
     return usfmObjects;
 }

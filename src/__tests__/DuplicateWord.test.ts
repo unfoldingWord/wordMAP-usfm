@@ -168,6 +168,15 @@ it("should not produce duplicate words", () => {
 \\w जिसमें|x-occurrence="1" x-occurrences="1"\\w*
 \\zaln-s | x-verified="true" x-occurrence="1" x-occurrences="1" x-content="οὐκ"
 \\w न|x-occurrence="1" x-occurrences="2"\\w*
+\\zaln-e\\*
+\\w तो|x-occurrence="1" x-occurrences="1"\\w*
+\\w कोई|x-occurrence="1" x-occurrences="1"\\w*
+\\w परिवर्तन|x-occurrence="1" x-occurrences="1"\\w*
+\\w हो|x-occurrence="1" x-occurrences="1"\\w*
+\\w सकता|x-occurrence="1" x-occurrences="1"\\w*
+\\w है,|x-occurrence="3" x-occurrences="3"\\w*
+\\w और|x-occurrence="3" x-occurrences="3"\\w*
+\\zaln-s | x-verified="true" x-occurrence="1" x-occurrences="1" x-content="οὐκ"
 \\w न|x-occurrence="2" x-occurrences="2"\\w*
 \\zaln-e\\*
 \\w अदल-बदल|x-occurrence="1" x-occurrences="1"\\w*
@@ -182,7 +191,7 @@ it("should not produce duplicate words", () => {
     expect(alignUSFM(alignments, usfm)).toEqual(expectedUSFM);
 });
 
-it("should not truncate the verse", () => {
+it("produces the un-aligned verse when alignments are empty", () => {
     const usfm = `\\id JAS
 \\ide UTF-8
 \\rem Copyright Information: Creative Commons Attribution-ShareAlike 4.0 License

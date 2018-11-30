@@ -34,6 +34,9 @@ export default class Sentence {
 
     private sentenceTokens: Token[] = [];
 
+    /**
+     * Returns an array of tokens in this sentence
+     */
     get tokens(): Token[] {
         return this.sentenceTokens;
     }
@@ -47,15 +50,18 @@ export default class Sentence {
 
     private contextID: string = "";
 
+    /**
+     * Returns the sentence context id
+     */
     get context() {
         return this.contextID;
     }
 
     /**
-     * Safely retrieves a token from the sentence
-     * @param index
+     * Retrieves a token from the sentence or throw an error.
+     * @param index - the token index
      */
-    public getTokenSafely(index: number): Token {
+    public requireToken(index: number): Token {
         if (index >= 0 && index < this.sentenceTokens.length) {
             return this.sentenceTokens[index];
         } else {

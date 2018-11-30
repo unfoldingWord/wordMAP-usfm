@@ -31,4 +31,12 @@ export default class Alignment {
         this.targetNgram = targetNgram;
         this.verified = verified;
     }
+
+    /**
+     * Checks if this alignment contains the target token
+     * @param token - the token position
+     */
+    public hasTargetToken(token: number): boolean {
+        return this.targetNgram.indexOf(token) >= 0;
+    }
 }
