@@ -4,6 +4,7 @@
   "description": "A utility for injecting alignment data into USFM files",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "display": "library",
   "scripts": {
     "lint": "tslint -c tslint.json src/**/*.ts",
     "docs": "typedoc --out docs --mode modules --target ES6",
