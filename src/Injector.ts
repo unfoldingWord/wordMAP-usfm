@@ -13,8 +13,7 @@ import Reference from "./Reference";
  * @return {string} the aligned usfm
  */
 export function alignUSFM(alignments: any, usfm: string, alignUnverified: boolean = true): string {
-    const usfmObject = usfmjs.toJSON(usfm);
-
+    const json = usfmjs.toJSON(usfm);
     if (alignments) {
         for (const verseId of Object.keys(alignments.segments)) {
             const segment = AlignedSegment.fromJson(alignments.segments[verseId]);
@@ -24,10 +23,10 @@ export function alignUSFM(alignments: any, usfm: string, alignUnverified: boolea
             const vId = reference.verse.toString();
 
             // look up verse
-            if (Object.keys(usfmObject.chapters).indexOf(cId) >= 0 && Object.keys(usfmObject.chapters[cId]).indexOf(vId) >= 0) {
+            if (Object.keys(json.chapters).indexOf(cId) >= 0 && Object.keys(json.chapters[cId]).indexOf(vId) >= 0) {
                 // apply alignments
                 try {
-                    usfmObject.chapters[cId][vId] = alignSegment(segment, alignUnverified);
+                    json.chapters[cId][vId] = alignSegment(segment, alignUnverified);
                 } catch (e) {
                     console.error(`Error caught at ${cId}:${vId}`);
                     throw e;
@@ -38,7 +37,7 @@ export function alignUSFM(alignments: any, usfm: string, alignUnverified: boolea
         }
     }
 
-    return usfmjs.toUSFM(usfmObject);
+    return usfmjs.toUSFM(json, {forcedNewLines: true});
 }
 
 /**
